@@ -1,12 +1,18 @@
 import SideBar from "@/components/SideBar"
-import { Container } from "@chakra-ui/react"
-import React from "react"
+import { Box, Flex } from "@chakra-ui/react"
+import { Outlet } from "@tanstack/react-router"
 
 const AuthenticatedLayout = () => {
 	return (
-		<Container padding={0} maxWidth={"100%"} display={"flex"}>
-			<SideBar />
-		</Container>
+		<Flex height="100vh" overflow="hidden">
+			<Box width="280px" height="100%" flexShrink={0}>
+				<SideBar />
+			</Box>
+
+			<Box flex={1} height="100%" overflowY="auto">
+				<Outlet />
+			</Box>
+		</Flex>
 	)
 }
 

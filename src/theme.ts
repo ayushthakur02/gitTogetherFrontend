@@ -28,7 +28,7 @@ const customConfig = defineConfig({
 				},
 				brand: {
 					primary: { value: { _light: "#10151a", _dark: "#ffffff" } },
-					secondary: { value: { _light: "#0058bb", _dark: "#a2c9ff" } },
+					secondary: { value: { _light: "#a2c9ff", _dark: "#0058bb" } },
 				},
 				status: {
 					success: { value: "#3fb950" }, // Same for both
