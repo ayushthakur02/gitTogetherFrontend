@@ -1,7 +1,229 @@
-import React from "react"
+import {
+	Box,
+	Button,
+	Flex,
+	Heading,
+	HStack,
+	Icon,
+	Input,
+	Separator,
+	Text,
+	VStack,
+} from "@chakra-ui/react"
+import { Link } from "@tanstack/react-router"
+
+import { FaCode, FaGithub } from "react-icons/fa"
 
 const Login = () => {
-	return <div>Login</div>
+	return (
+		<Flex
+			width="100%"
+			minH="100vh"
+			justify="center"
+			align="center"
+			bg="bg.primary"
+			position="relative"
+			overflow="hidden"
+			p={6}>
+			{/* BACKGROUND DOTS */}
+			<Box
+				position="absolute"
+				inset={0}
+				backgroundImage="
+					radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)
+				"
+				backgroundSize="24px 24px"
+				opacity={0.12}
+			/>
+
+			{/* MAIN CARD */}
+			<Flex
+				position="relative"
+				zIndex={1}
+				width="100%"
+				maxWidth="1200px"
+				height="calc(100vh - 48px)"
+				maxH="760px"
+				border="1px solid"
+				borderColor="border.default"
+				borderRadius="2xl"
+				bg="bg.secondary"
+				backdropFilter="blur(14px)"
+				overflow="hidden">
+				{/* LEFT PANEL */}
+				<Flex
+					flex={1}
+					direction="column"
+					justify="space-between"
+					gap={16}
+					p={12}
+					borderRight="1px solid"
+					borderColor="border.default">
+					<VStack align="start" gap={8}>
+						{/* LOGO */}
+						<HStack gap={3}>
+							<Icon as={FaCode} color="brand.secondary" />
+
+							<Heading size="md" color="text.primary">
+								gitTogether
+							</Heading>
+						</HStack>
+
+						{/* FEATURES */}
+						<VStack align="start" gap={6}>
+							<Heading color="text.primary" size="5xl">
+								Build your developer network.
+							</Heading>
+							<Heading color="brand.secondary" fontWeight="semibold" size="5xl">
+								Fork your future.
+							</Heading>
+
+							<HStack align="start">
+								<Text color="text.secondary">
+									The social engineering platform where clean code meets
+									meaningful connection. Connect with developers who share your
+									stack and your vision.
+								</Text>
+							</HStack>
+						</VStack>
+					</VStack>
+
+					{/* TERMINAL BOX */}
+					<Box
+						maxW="420px"
+						bg="neutral.50"
+						border="1px solid"
+						borderColor="border.default"
+						borderRadius="lg"
+						p={5}
+						mb={5}
+						fontFamily="mono"
+						fontSize="sm"
+						color="status.success"
+						boxShadow="0 0 20px rgba(34,197,94,0.12)">
+						<Text>1 git status</Text>
+						<Text>2 On branch main</Text>
+						<Text>3 Your soulmate is ready to merge.</Text>
+						<Text>4 git commit -m \"found the one\"</Text>
+					</Box>
+				</Flex>
+
+				{/* RIGHT PANEL */}
+				<Flex flex={1} direction="column" p={12}>
+					<VStack align="stretch" gap={7} maxW="420px" width="100%" mx="auto">
+						{/* HEADER */}
+						<Box>
+							<Text color="text.secondary">Welcome back, dev.</Text>
+
+							<Heading size="md" color="text.primary" mt={2} lineHeight="1.4">
+								Log in to continue your collaborative journey.
+							</Heading>
+						</Box>
+
+						{/* GITHUB BUTTON */}
+						<Button
+							size="lg"
+							bg="button.githubBg"
+							color="button.githubText"
+							border="button.githubBorder"
+							borderColor="border.default"
+							_hover={{
+								bg: "bg.tertiary",
+							}}>
+							<FaGithub />
+							Continue with GitHub
+						</Button>
+
+						{/* SEPARATOR */}
+						<HStack width="100%">
+							<Separator flex={1} borderColor="border.default" />
+
+							<Text color="text.secondary" fontSize="sm" whiteSpace="nowrap">
+								OR EMAIL
+							</Text>
+
+							<Separator flex={1} borderColor="border.default" />
+						</HStack>
+
+						{/* FORM */}
+						<VStack align="stretch" gap={4}>
+							{/* EMAIL */}
+							<Box>
+								<Text mb={2} color="text.secondary" fontSize="sm">
+									Email address
+								</Text>
+
+								<Input
+									size="lg"
+									bg="bg.tertiary"
+									borderColor="border.default"
+									color="text.primary"
+									_focusVisible={{
+										borderColor: "brand.secondary",
+										boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
+									}}
+								/>
+							</Box>
+
+							{/* PASSWORD */}
+							<Box>
+								<Flex justify="space-between" mb={2}>
+									<Text color="text.secondary" fontSize="sm">
+										Password
+									</Text>
+
+									<Text color="brand.secondary" fontSize="sm" cursor="pointer">
+										Forgot Password?
+									</Text>
+								</Flex>
+
+								<Input
+									type="password"
+									size="lg"
+									bg="bg.tertiary"
+									borderColor="border.default"
+									color="text.primary"
+									_focusVisible={{
+										borderColor: "brand.secondary",
+										boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
+									}}
+								/>
+							</Box>
+						</VStack>
+
+						{/* SIGN IN */}
+						<Button
+							size="lg"
+							bg="button.primaryBg"
+							color="button.primaryText"
+							_hover={{
+								bg: "button.primaryHover",
+							}}>
+							Sign In
+						</Button>
+
+						<Separator borderColor="border.default" />
+
+						{/* FOOTER */}
+						<VStack gap={3}>
+							<Text color="text.secondary">New to gitTogether?</Text>
+							<Link to="/signup">
+								<Button
+									variant="outline"
+									borderColor="border.default"
+									color="text.primary"
+									_hover={{
+										bg: "bg.tertiary",
+									}}>
+									Create New Account
+								</Button>
+							</Link>
+						</VStack>
+					</VStack>
+				</Flex>
+			</Flex>
+		</Flex>
+	)
 }
 
 export default Login

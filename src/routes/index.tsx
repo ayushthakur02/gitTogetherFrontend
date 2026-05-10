@@ -4,7 +4,7 @@ export const Route = createFileRoute("/")({
 	beforeLoad: () => {
 		const token = localStorage.getItem("token")
 
-		if (!token) {
+		if (token) {
 			throw redirect({
 				to: "/feed",
 			})
