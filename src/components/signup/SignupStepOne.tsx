@@ -1,67 +1,59 @@
-import type { SignupStepProps } from "@/pages/signup.interfaces"
+import type { SignupStepProps } from "@/interfaces/signup.interfaces"
+
 import { Field, HStack, Input, VStack } from "@chakra-ui/react"
 
-const SignupStepOne = ({ formData, setFormData }: SignupStepProps) => {
+const SignupStepOne = ({ register, errors }: SignupStepProps) => {
 	return (
 		<VStack align="stretch" gap={4}>
 			<HStack>
-				<Field.Root required>
+				<Field.Root required invalid={!!errors.firstName}>
 					<Field.Label>
 						First Name
 						<Field.RequiredIndicator />
 					</Field.Label>
 
-					<Input
-						placeholder="John"
-						value={formData.firstName}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								firstName: e.target.value,
-							})
-						}
-					/>
+					<Input placeholder="John" {...register("firstName")} />
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{errors.firstName?.message}
+					</Field.ErrorText>
 				</Field.Root>
 
-				<Field.Root required>
+				<Field.Root required invalid={!!errors.lastName}>
 					<Field.Label>
 						Last Name
 						<Field.RequiredIndicator />
 					</Field.Label>
 
-					<Input
-						placeholder="Doe"
-						value={formData.lastName}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								lastName: e.target.value,
-							})
-						}
-					/>
+					<Input placeholder="Doe" {...register("lastName")} />
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{errors.lastName?.message}
+					</Field.ErrorText>
 				</Field.Root>
 			</HStack>
 
 			<HStack>
-				<Field.Root required>
+				<Field.Root required invalid={!!errors.username}>
 					<Field.Label>
 						Username
 						<Field.RequiredIndicator />
 					</Field.Label>
 
-					<Input
-						placeholder="johndoe"
-						value={formData.username}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								username: e.target.value,
-							})
-						}
-					/>
+					<Input placeholder="johndoe" {...register("username")} />
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{errors.username?.message}
+					</Field.ErrorText>
 				</Field.Root>
 
-				<Field.Root required>
+				<Field.Root required invalid={!!errors.email}>
 					<Field.Label>
 						Email
 						<Field.RequiredIndicator />
@@ -70,52 +62,46 @@ const SignupStepOne = ({ formData, setFormData }: SignupStepProps) => {
 					<Input
 						type="email"
 						placeholder="Enter your email"
-						value={formData.email}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								email: e.target.value,
-							})
-						}
+						{...register("email")}
 					/>
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{errors.email?.message}
+					</Field.ErrorText>
 				</Field.Root>
 			</HStack>
 
 			<HStack>
-				<Field.Root required>
+				<Field.Root required invalid={!!errors.password}>
 					<Field.Label>
 						Password
 						<Field.RequiredIndicator />
 					</Field.Label>
 
-					<Input
-						type="password"
-						value={formData.password}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								password: e.target.value,
-							})
-						}
-					/>
+					<Input type="password" {...register("password")} />
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{errors.password?.message}
+					</Field.ErrorText>
 				</Field.Root>
 
-				<Field.Root required>
+				<Field.Root required invalid={!!errors.confirmPassword}>
 					<Field.Label>
 						Confirm Password
 						<Field.RequiredIndicator />
 					</Field.Label>
 
-					<Input
-						type="password"
-						value={formData.confirmPassword}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								confirmPassword: e.target.value,
-							})
-						}
-					/>
+					<Input type="password" {...register("confirmPassword")} />
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{errors.confirmPassword?.message}
+					</Field.ErrorText>
 				</Field.Root>
 			</HStack>
 		</VStack>

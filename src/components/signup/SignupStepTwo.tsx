@@ -10,23 +10,30 @@ import {
 	type FileUploadFileRejectDetails,
 } from "@chakra-ui/react"
 
-import { LuFileImage } from "react-icons/lu"
+import { Controller } from "react-hook-form"
 
-import FileUploadList from "../FileUploadList"
+import { LuFileImage } from "react-icons/lu"
 
 import { useState } from "react"
 
+import FileUploadList from "../FileUploadList"
+
 import { ERROR_MESSAGES, ERRORS } from "@/constants/signupConstants"
 
-import type { SignupStepProps } from "@/pages/signup.interfaces"
+import type { SignupStepProps } from "@/interfaces/signup.interfaces"
 
-const SignupStepTwo = ({ formData, setFormData }: SignupStepProps) => {
+const SignupStepTwo = ({
+	register,
+	errors,
+	setValue,
+	control,
+}: SignupStepProps) => {
 	const [multipleImageError, setMultipleImageError] = useState("")
 
 	return (
-		<VStack align="stretch" gap={4}>
-			{/* PROFILE PIC */}
-			<Field.Root required>
+		<VStack align="stretch" gap={4} width="100%">
+			{/* PROFILE PICTURE */}
+			<Field.Root required invalid={!!errors.profilePic}>
 				<Field.Label>
 					Profile Picture
 					<Field.RequiredIndicator />
@@ -36,9 +43,8 @@ const SignupStepTwo = ({ formData, setFormData }: SignupStepProps) => {
 					accept="image/*"
 					maxFiles={1}
 					onFileAccept={(details) => {
-						setFormData({
-							...formData,
-							profilePic: details.files[0],
+						setValue("profilePic", details.files[0], {
+							shouldValidate: true,
 						})
 					}}>
 					<FileUpload.HiddenInput />
@@ -52,6 +58,12 @@ const SignupStepTwo = ({ formData, setFormData }: SignupStepProps) => {
 
 					<FileUploadList />
 				</FileUpload.Root>
+
+				<Field.ErrorText>
+					<Field.ErrorIcon />
+
+					{String(errors.profilePic?.message) || ""}
+				</Field.ErrorText>
 			</Field.Root>
 
 			{/* MORE PHOTOS */}
@@ -61,15 +73,14 @@ const SignupStepTwo = ({ formData, setFormData }: SignupStepProps) => {
 				<FileUpload.Root
 					accept="image/*"
 					maxFiles={5}
-					onFileReject={(details: FileUploadFileRejectDetails) =>
+					onFileReject={(details: FileUploadFileRejectDetails) => {
 						setMultipleImageError(details.files[0].errors[0])
-					}
+					}}
 					onFileAccept={(details) => {
 						setMultipleImageError("")
 
-						setFormData({
-							...formData,
-							morePhotos: details.files,
+						setValue("morePhotos", details.files, {
+							shouldValidate: true,
 						})
 					}}>
 					<FileUpload.HiddenInput />
@@ -94,66 +105,69 @@ const SignupStepTwo = ({ formData, setFormData }: SignupStepProps) => {
 			</Field.Root>
 
 			{/* BIO */}
-			<Field.Root>
+			<Field.Root invalid={!!errors.bio}>
 				<Field.Label>Bio</Field.Label>
 
 				<Textarea
 					placeholder="Tell us about yourself..."
-					value={formData.bio}
-					onChange={(e) =>
-						setFormData({
-							...formData,
-							bio: e.target.value,
-						})
-					}
+					{...register("bio")}
 				/>
+
+				<Field.ErrorText>
+					<Field.ErrorIcon />
+
+					{errors.bio?.message}
+				</Field.ErrorText>
 			</Field.Root>
 
 			{/* AGE + GENDER */}
-			<HStack>
-				<Field.Root required>
+			<HStack width="100%">
+				<Field.Root required invalid={!!errors.age}>
 					<Field.Label>
 						Age
 						<Field.RequiredIndicator />
 					</Field.Label>
 
-					<Input
-						min={13}
-						type="number"
-						value={formData.age}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								age: Number(e.target.value),
-							})
-						}
-					/>
+					<Input type="number" min={13} {...register("age")} />
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{errors.age?.message}
+					</Field.ErrorText>
 				</Field.Root>
 
-				<Field.Root required>
+				<Field.Root required invalid={!!errors.gender}>
 					<Field.Label>
 						Gender
 						<Field.RequiredIndicator />
 					</Field.Label>
 
-					<NativeSelect.Root>
-						<NativeSelect.Field
-							value={formData.gender}
-							onChange={(e) =>
-								setFormData({
-									...formData,
-									gender: e.target.value,
-								})
-							}>
-							<option value="">Select Gender</option>
+					<Controller
+						control={control}
+						name="gender"
+						render={({ field }) => (
+							<NativeSelect.Root>
+								<NativeSelect.Field
+									value={field.value}
+									onChange={(e) => field.onChange(e.target.value)}>
+									<option value="">Select Gender</option>
 
-							<option value="male">Male</option>
+									<option value="male">Male</option>
 
-							<option value="female">Female</option>
+									<option value="female">Female</option>
 
-							<option value="other">Other</option>
-						</NativeSelect.Field>
-					</NativeSelect.Root>
+									<option value="other">Other</option>
+								</NativeSelect.Field>
+							</NativeSelect.Root>
+						)}
+					/>
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{errors.gender?.message}
+					</Field.ErrorText>
 				</Field.Root>
 			</HStack>
 		</VStack>

@@ -2,6 +2,12 @@ import SignupStepOne from "@/components/signup/SignupStepOne"
 import SignupStepThree from "@/components/signup/SignupStepThree"
 import SignupStepTwo from "@/components/signup/SignupStepTwo"
 
+import { useForm } from "react-hook-form"
+
+import { zodResolver } from "@hookform/resolvers/zod"
+
+import { signupSchema, type SignupFormData } from "@/schemas/signupSchema"
+
 import {
 	Box,
 	Button,
@@ -18,51 +24,113 @@ import {
 import { useState } from "react"
 
 import { FaCode, FaGithub } from "react-icons/fa"
-import type { SignupFormData } from "./signup.interfaces"
 
 const Signup = () => {
-	const [step, setStep] = useState(0)
-	const [formData, setFormData] = useState<SignupFormData>({
-		firstName: "",
-		lastName: "",
-		username: "",
-		email: "",
-		password: "",
-		confirmPassword: "",
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		trigger,
+		control,
+		formState: { errors, isValid },
+	} = useForm<SignupFormData>({
+		resolver: zodResolver(signupSchema),
 
-		profilePic: null,
-		morePhotos: [],
+		mode: "onChange",
 
-		bio: "",
-		age: "",
-		gender: "",
+		defaultValues: {
+			firstName: "",
+			lastName: "",
+			username: "",
+			email: "",
+			password: "",
+			confirmPassword: "",
 
-		country: "",
-		state: "",
-		city: "",
+			profilePic: undefined,
+			morePhotos: [],
 
-		skills: [],
+			bio: "",
+			age: undefined,
+			gender: "",
 
-		phoneNumber: "",
+			country: "",
+			state: "",
+			city: "",
+
+			skills: [],
+
+			phoneNumber: "",
+		},
 	})
+
+	const [step, setStep] = useState(0)
+
+	const onSubmit = (data: SignupFormData) => {
+		console.log(data)
+	}
+
+	const handleNext = async () => {
+		let fields: Array<keyof SignupFormData> = []
+
+		if (step === 0) {
+			fields = [
+				"firstName",
+				"lastName",
+				"username",
+				"email",
+				"password",
+				"confirmPassword",
+			]
+		}
+
+		if (step === 1) {
+			fields = ["profilePic", "bio", "age", "gender"]
+		}
+
+		if (step === 2) {
+			fields = ["country", "skills"]
+		}
+
+		const valid = await trigger(fields)
+
+		if (!valid) return
+
+		if (step < 2) {
+			setStep(step + 1)
+		} else {
+			handleSubmit(onSubmit)()
+		}
+	}
 
 	const steps = [
 		{
 			title: "Account",
-			component: (
-				<SignupStepOne formData={formData} setFormData={setFormData} />
-			),
+
+			component: <SignupStepOne register={register} errors={errors} />,
 		},
+
 		{
 			title: "Profile",
+
 			component: (
-				<SignupStepTwo formData={formData} setFormData={setFormData} />
+				<SignupStepTwo
+					register={register}
+					errors={errors}
+					setValue={setValue}
+					control={control}
+				/>
 			),
 		},
+
 		{
 			title: "Developer Info",
+
 			component: (
-				<SignupStepThree formData={formData} setFormData={setFormData} />
+				<SignupStepThree
+					register={register}
+					errors={errors}
+					control={control}
+				/>
 			),
 		},
 	]
@@ -175,7 +243,7 @@ const Signup = () => {
 						</Box>
 
 						{/* STEPS */}
-						<Steps.Root step={step} count={5} colorPalette="blue">
+						<Steps.Root step={step} count={3} colorPalette="blue">
 							<VStack align="stretch" gap={6}>
 								<Steps.List>
 									{steps.map((item, index) => (
@@ -216,14 +284,9 @@ const Signup = () => {
 										_hover={{
 											bg: "button.primaryHover",
 										}}
-										onClick={() => {
-											if (step < 4) {
-												setStep(step + 1)
-											} else {
-												console.log("submit")
-											}
-										}}>
-										{step === 4 ? "Create Account" : "Next"}
+										disabled={!isValid}
+										onClick={handleNext}>
+										{step === 2 ? "Create Account" : "Next"}
 									</Button>
 								</HStack>
 

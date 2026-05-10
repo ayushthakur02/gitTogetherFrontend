@@ -1,88 +1,95 @@
-import type { SignupStepProps } from "@/pages/signup.interfaces"
+import type { SignupStepProps } from "@/interfaces/signup.interfaces"
 
 import { Field, HStack, Input, TagsInput, VStack } from "@chakra-ui/react"
 
-const SignupStepThree = ({ formData, setFormData }: SignupStepProps) => {
+import { Controller } from "react-hook-form"
+
+const SignupStepThree = ({ register, errors, control }: SignupStepProps) => {
 	return (
-		<VStack align="stretch" gap={4}>
-			<HStack>
-				<Field.Root>
+		<VStack align="stretch" gap={4} width="100%">
+			{/* COUNTRY + STATE */}
+			<HStack width="100%">
+				<Field.Root invalid={!!errors.country}>
 					<Field.Label>Country</Field.Label>
 
-					<Input
-						value={formData.country}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								country: e.target.value,
-							})
-						}
-					/>
+					<Input placeholder="India" {...register("country")} />
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{String(errors.country?.message || "")}
+					</Field.ErrorText>
 				</Field.Root>
 
-				<Field.Root>
+				<Field.Root invalid={!!errors.state}>
 					<Field.Label>State</Field.Label>
 
-					<Input
-						value={formData.state}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								state: e.target.value,
-							})
-						}
-					/>
+					<Input placeholder="Punjab" {...register("state")} />
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{String(errors.state?.message || "")}
+					</Field.ErrorText>
 				</Field.Root>
 			</HStack>
 
-			<HStack>
-				<Field.Root>
+			{/* CITY + PHONE */}
+			<HStack width="100%">
+				<Field.Root invalid={!!errors.city}>
 					<Field.Label>City</Field.Label>
 
-					<Input
-						value={formData.city}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								city: e.target.value,
-							})
-						}
-					/>
+					<Input placeholder="Chandigarh" {...register("city")} />
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{String(errors.city?.message || "")}
+					</Field.ErrorText>
 				</Field.Root>
 
-				<Field.Root>
+				<Field.Root invalid={!!errors.phoneNumber}>
 					<Field.Label>Phone Number</Field.Label>
 
 					<Input
 						type="tel"
-						value={formData.phoneNumber}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								phoneNumber: e.target.value,
-							})
-						}
+						placeholder="9876543210"
+						{...register("phoneNumber")}
 					/>
+
+					<Field.ErrorText>
+						<Field.ErrorIcon />
+
+						{String(errors.phoneNumber?.message || "")}
+					</Field.ErrorText>
 				</Field.Root>
 			</HStack>
 
-			<Field.Root>
+			{/* SKILLS */}
+			<Field.Root invalid={!!errors.skills}>
 				<Field.Label>Skills</Field.Label>
 
-				<TagsInput.Root
-					value={formData.skills}
-					onValueChange={(e) =>
-						setFormData({
-							...formData,
-							skills: e.value,
-						})
-					}>
-					<TagsInput.HiddenInput />
+				<Controller
+					control={control}
+					name="skills"
+					render={({ field }) => (
+						<TagsInput.Root
+							value={field.value}
+							onValueChange={(e) => field.onChange(e.value)}>
+							<TagsInput.HiddenInput />
 
-					<TagsInput.Control>
-						<TagsInput.Input placeholder="React, Node, Java..." />
-					</TagsInput.Control>
-				</TagsInput.Root>
+							<TagsInput.Control>
+								<TagsInput.Input placeholder="React, Node, Java..." />
+							</TagsInput.Control>
+						</TagsInput.Root>
+					)}
+				/>
+
+				<Field.ErrorText>
+					<Field.ErrorIcon />
+
+					{String(errors.skills?.message || "")}
+				</Field.ErrorText>
 			</Field.Root>
 		</VStack>
 	)
