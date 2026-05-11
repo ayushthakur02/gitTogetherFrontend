@@ -43,7 +43,7 @@ const SignupStepTwo = ({
 					accept="image/*"
 					maxFiles={1}
 					onFileAccept={(details) => {
-						setValue("profilePic", details.files[0], {
+						setValue!("profilePic", details.files[0], {
 							shouldValidate: true,
 						})
 					}}>
@@ -79,7 +79,7 @@ const SignupStepTwo = ({
 					onFileAccept={(details) => {
 						setMultipleImageError("")
 
-						setValue("morePhotos", details.files, {
+						setValue!("morePhotos", details.files, {
 							shouldValidate: true,
 						})
 					}}>
@@ -128,7 +128,12 @@ const SignupStepTwo = ({
 						<Field.RequiredIndicator />
 					</Field.Label>
 
-					<Input type="number" min={13} {...register("age")} />
+					<Input
+						type="number"
+						{...register("age", {
+							valueAsNumber: true,
+						})}
+					/>
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />

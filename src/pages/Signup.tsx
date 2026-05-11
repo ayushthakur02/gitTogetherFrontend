@@ -2,7 +2,7 @@ import SignupStepOne from "@/components/signup/SignupStepOne"
 import SignupStepThree from "@/components/signup/SignupStepThree"
 import SignupStepTwo from "@/components/signup/SignupStepTwo"
 
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -21,7 +21,7 @@ import {
 	VStack,
 } from "@chakra-ui/react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { FaCode, FaGithub } from "react-icons/fa"
 
@@ -32,38 +32,24 @@ const Signup = () => {
 		setValue,
 		trigger,
 		control,
-		formState: { errors, isValid },
+		formState: { errors },
 	} = useForm<SignupFormData>({
 		resolver: zodResolver(signupSchema),
 
-		mode: "onChange",
+		mode: "onTouched",
 
-		defaultValues: {
-			firstName: "",
-			lastName: "",
-			username: "",
-			email: "",
-			password: "",
-			confirmPassword: "",
-
-			profilePic: undefined,
-			morePhotos: [],
-
-			bio: "",
-			age: undefined,
-			gender: "",
-
-			country: "",
-			state: "",
-			city: "",
-
-			skills: [],
-
-			phoneNumber: "",
-		},
+		reValidateMode: "onChange",
+	})
+	const password = useWatch({
+		control,
+		name: "password",
 	})
 
 	const [step, setStep] = useState(0)
+
+	useEffect(() => {
+		trigger("confirmPassword")
+	}, [password, trigger])
 
 	const onSubmit = (data: SignupFormData) => {
 		console.log(data)
@@ -174,14 +160,13 @@ const Signup = () => {
 				<Flex
 					width="340px"
 					direction="column"
-					justify="center"
+					justify="eve"
 					p={10}
 					borderRight="1px solid"
 					borderColor="border.default"
 					bg="bg.secondary"
 					flexShrink={0}>
 					<VStack align="stretch" gap={8}>
-						{/* LOGO */}
 						<HStack gap={3}>
 							<Icon as={FaCode} color="brand.secondary" />
 
@@ -189,9 +174,9 @@ const Signup = () => {
 								gitTogether
 							</Heading>
 						</HStack>
-
-						{/* GITHUB BUTTON */}
 						<Button
+							marginTop={"75%"}
+							alignSelf={"center"}
 							size="lg"
 							bg="button.githubBg"
 							color="button.githubText"
@@ -203,22 +188,6 @@ const Signup = () => {
 							<FaGithub />
 							Continue with GitHub
 						</Button>
-
-						{/* SEPARATOR */}
-						<HStack width="100%">
-							<Separator flex={1} borderColor="border.default" />
-
-							<Text color="text.secondary" fontSize="sm" whiteSpace="nowrap">
-								OR
-							</Text>
-
-							<Separator flex={1} borderColor="border.default" />
-						</HStack>
-
-						<Text color="text.secondary" fontSize="sm" lineHeight="1.7">
-							Build meaningful developer connections based on your stack,
-							skills, and ambitions.
-						</Text>
 					</VStack>
 				</Flex>
 
@@ -284,7 +253,6 @@ const Signup = () => {
 										_hover={{
 											bg: "button.primaryHover",
 										}}
-										disabled={!isValid}
 										onClick={handleNext}>
 										{step === 2 ? "Create Account" : "Next"}
 									</Button>

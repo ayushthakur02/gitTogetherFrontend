@@ -99,7 +99,6 @@ const SignupStepOne = ({ register, errors }: SignupStepProps) => {
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />
-
 						{errors.confirmPassword?.message}
 					</Field.ErrorText>
 				</Field.Root>

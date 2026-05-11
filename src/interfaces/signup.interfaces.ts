@@ -12,7 +12,7 @@ export interface SignupStepProps {
 
 	errors: FieldErrors<SignupFormData>
 
-	setValue: UseFormSetValue<SignupFormData>
+	setValue?: UseFormSetValue<SignupFormData>
 
-	control: Control<SignupFormData>
+	control?: Control<SignupFormData>
 }

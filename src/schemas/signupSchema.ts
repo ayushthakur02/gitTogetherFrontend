@@ -9,11 +9,29 @@ export const signupSchema = z
 
 		username: z.string().min(3, "Username is required"),
 
-		email: z.string().email("Invalid email"),
+		email: z.email({
+			message: "Invalid email",
+		}),
 
-		password: z.string().min(8, "Password must be at least 8 characters"),
+		password: z
+			.string()
+			.min(8, {
+				message: "Password must be at least 8 characters",
+			})
+			.regex(/[A-Z]/, {
+				message: "Password must contain at least 1 uppercase letter",
+			})
+			.regex(/[a-z]/, {
+				message: "Password must contain at least 1 lowercase letter",
+			})
+			.regex(/[0-9]/, {
+				message: "Password must contain at least 1 number",
+			})
+			.regex(/[!@#$%^&*]/, {
+				message: "Password must contain at least 1 special character",
+			}),
 
-		confirmPassword: z.string(),
+		confirmPassword: z.string({}),
 
 		// STEP 2
 		profilePic: z.any(),
@@ -22,7 +40,7 @@ export const signupSchema = z
 
 		bio: z.string().min(10, "Bio is required"),
 
-		age: z.coerce.number().min(18, "Must be at least 18"),
+		age: z.number().min(18, "Must be at least 18"),
 
 		gender: z.string().min(1, "Gender is required"),
 
@@ -37,14 +55,10 @@ export const signupSchema = z
 
 		phoneNumber: z.string(),
 	})
-	.superRefine((data, ctx) => {
-		if (data.password !== data.confirmPassword) {
-			ctx.addIssue({
-				code: "custom",
-				path: ["confirmPassword"],
-				message: "Passwords do not match",
-			})
-		}
+	.refine((data) => data.password === data.confirmPassword, {
+		path: ["confirmPassword"],
+
+		message: "Passwords do not match",
 	})
 
 export type SignupFormData = z.infer<typeof signupSchema>
