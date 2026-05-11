@@ -264,16 +264,17 @@ const Signup = () => {
 								{/* FOOTER */}
 								<VStack gap={3}>
 									<Text color="text.secondary">Already have an account?</Text>
-
-									<Button
-										variant="outline"
-										borderColor="border.default"
-										color="text.primary"
-										_hover={{
-											bg: "bg.tertiary",
-										}}>
-										<Link to={"/login"}>Log In</Link>
-									</Button>
+									<Link to={"/login"}>
+										<Button
+											variant="outline"
+											borderColor="border.default"
+											color="text.primary"
+											_hover={{
+												bg: "bg.tertiary",
+											}}>
+											Log In
+										</Button>
+									</Link>
 								</VStack>
 							</VStack>
 						</Steps.Root>

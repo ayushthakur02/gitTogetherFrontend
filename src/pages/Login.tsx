@@ -1,3 +1,4 @@
+import { useLogin } from "@/hooks/useLogin"
 import {
 	Box,
 	Button,
@@ -13,8 +14,18 @@ import {
 import { Link } from "@tanstack/react-router"
 
 import { FaCode, FaGithub } from "react-icons/fa"
+import type { LoginFormData } from "../interfaces/login.interfaces"
+import { useState } from "react"
 
 const Login = () => {
+	const [data, setData] = useState({
+		userId: "",
+		password: "",
+	})
+	const loginMutation = useLogin()
+	const onSubmit = (data: LoginFormData) => {
+		loginMutation.mutate(data)
+	}
 	return (
 		<Flex
 			width="100%"
@@ -150,7 +161,7 @@ const Login = () => {
 							{/* EMAIL */}
 							<Box>
 								<Text mb={2} color="text.secondary" fontSize="sm">
-									Email address
+									Username or Email address
 								</Text>
 
 								<Input
@@ -162,6 +173,12 @@ const Login = () => {
 										borderColor: "brand.secondary",
 										boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
 									}}
+									onChange={(e) =>
+										setData({
+											...data,
+											userId: e.target.value,
+										})
+									}
 								/>
 							</Box>
 
@@ -187,6 +204,12 @@ const Login = () => {
 										borderColor: "brand.secondary",
 										boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
 									}}
+									onChange={(e) =>
+										setData({
+											...data,
+											password: e.target.value,
+										})
+									}
 								/>
 							</Box>
 						</VStack>
@@ -198,7 +221,8 @@ const Login = () => {
 							color="button.primaryText"
 							_hover={{
 								bg: "button.primaryHover",
-							}}>
+							}}
+							onClick={() => onSubmit(data)}>
 							Sign In
 						</Button>
 
