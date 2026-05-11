@@ -24,6 +24,7 @@ import {
 import { useEffect, useState } from "react"
 
 import { FaCode, FaGithub } from "react-icons/fa"
+import { Link } from "@tanstack/react-router"
 
 const Signup = () => {
 	const {
@@ -271,7 +272,7 @@ const Signup = () => {
 										_hover={{
 											bg: "bg.tertiary",
 										}}>
-										Log In
+										<Link to={"/login"}>Log In</Link>
 									</Button>
 								</VStack>
 							</VStack>
