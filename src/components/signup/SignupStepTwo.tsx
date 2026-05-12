@@ -100,7 +100,9 @@ const SignupStepTwo = ({
 
 					{multipleImageError === ERRORS.TOO_MANY_FILES
 						? ERROR_MESSAGES.TOO_MANY_FILES
-						: ERROR_MESSAGES.FILE_EXISTS}
+						: multipleImageError === ERRORS.FILE_EXISTS
+							? ERROR_MESSAGES.FILE_EXISTS
+							: multipleImageError}
 				</Field.ErrorText>
 			</Field.Root>
 

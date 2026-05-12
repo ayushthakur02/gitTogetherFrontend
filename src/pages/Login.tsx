@@ -1,7 +1,9 @@
 import { useLogin } from "@/hooks/useLogin"
+import { loginSchema, type LoginFormData } from "@/schemas/loginSchema"
 import {
 	Box,
 	Button,
+	Field,
 	Flex,
 	Heading,
 	HStack,
@@ -11,21 +13,29 @@ import {
 	Text,
 	VStack,
 } from "@chakra-ui/react"
-import { Link } from "@tanstack/react-router"
-
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Link, useNavigate } from "@tanstack/react-router"
+import { useForm } from "react-hook-form"
 import { FaCode, FaGithub } from "react-icons/fa"
-import type { LoginFormData } from "../interfaces/login.interfaces"
-import { useState } from "react"
 
 const Login = () => {
-	const [data, setData] = useState({
-		userId: "",
-		password: "",
-	})
+	const navigate = useNavigate()
 	const loginMutation = useLogin()
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<LoginFormData>({
+		resolver: zodResolver(loginSchema),
+	})
+
 	const onSubmit = (data: LoginFormData) => {
-		loginMutation.mutate(data)
+		loginMutation.mutate(data, {
+			onSuccess: () => navigate({ to: "/feed" }),
+		})
 	}
+
 	return (
 		<Flex
 			width="100%"
@@ -115,7 +125,7 @@ const Login = () => {
 						<Text>1 git status</Text>
 						<Text>2 On branch main</Text>
 						<Text>3 Your soulmate is ready to merge.</Text>
-						<Text>4 git commit -m \"found the one\"</Text>
+						<Text>4 git commit -m "found the one"</Text>
 					</Box>
 				</Flex>
 
@@ -136,7 +146,7 @@ const Login = () => {
 							size="lg"
 							bg="button.githubBg"
 							color="button.githubText"
-							border="button.githubBorder"
+							border="1px solid"
 							borderColor="border.default"
 							_hover={{
 								bg: "bg.tertiary",
@@ -158,8 +168,8 @@ const Login = () => {
 
 						{/* FORM */}
 						<VStack align="stretch" gap={4}>
-							{/* EMAIL */}
-							<Box>
+							{/* EMAIL / USERNAME */}
+							<Field.Root invalid={!!errors.userId}>
 								<Text mb={2} color="text.secondary" fontSize="sm">
 									Username or Email address
 								</Text>
@@ -171,25 +181,29 @@ const Login = () => {
 									color="text.primary"
 									_focusVisible={{
 										borderColor: "brand.secondary",
-										boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
+										boxShadow:
+											"0 0 0 1px var(--chakra-colors-brand-secondary)",
 									}}
-									onChange={(e) =>
-										setData({
-											...data,
-											userId: e.target.value,
-										})
-									}
+									{...register("userId")}
 								/>
-							</Box>
+
+								<Field.ErrorText>
+									<Field.ErrorIcon />
+									{errors.userId?.message}
+								</Field.ErrorText>
+							</Field.Root>
 
 							{/* PASSWORD */}
-							<Box>
+							<Field.Root invalid={!!errors.password}>
 								<Flex justify="space-between" mb={2}>
 									<Text color="text.secondary" fontSize="sm">
 										Password
 									</Text>
 
-									<Text color="brand.secondary" fontSize="sm" cursor="pointer">
+									<Text
+										color="brand.secondary"
+										fontSize="sm"
+										cursor="pointer">
 										Forgot Password?
 									</Text>
 								</Flex>
@@ -202,16 +216,17 @@ const Login = () => {
 									color="text.primary"
 									_focusVisible={{
 										borderColor: "brand.secondary",
-										boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
+										boxShadow:
+											"0 0 0 1px var(--chakra-colors-brand-secondary)",
 									}}
-									onChange={(e) =>
-										setData({
-											...data,
-											password: e.target.value,
-										})
-									}
+									{...register("password")}
 								/>
-							</Box>
+
+								<Field.ErrorText>
+									<Field.ErrorIcon />
+									{errors.password?.message}
+								</Field.ErrorText>
+							</Field.Root>
 						</VStack>
 
 						{/* SIGN IN */}
@@ -222,7 +237,9 @@ const Login = () => {
 							_hover={{
 								bg: "button.primaryHover",
 							}}
-							onClick={() => onSubmit(data)}>
+							loading={loginMutation.isPending}
+							disabled={loginMutation.isPending}
+							onClick={handleSubmit(onSubmit)}>
 							Sign In
 						</Button>
 

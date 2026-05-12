@@ -38,7 +38,12 @@ export const signupSchema = z
 
 		morePhotos: z.array(z.any()),
 
-		bio: z.string().min(10, "Bio is required"),
+		bio: z
+			.string()
+			.optional()
+			.refine((val) => !val || val.length >= 10, {
+				message: "Bio must be at least 10 characters",
+			}),
 
 		age: z.number().min(18, "Must be at least 18"),
 

@@ -8,16 +8,22 @@ import {
 	Icon,
 	List,
 	Switch,
+	Text,
 } from "@chakra-ui/react"
 
 import { Link, useRouterState } from "@tanstack/react-router"
 import { FaMoon, FaSun } from "react-icons/fa"
+import { useLogout } from "@/hooks/useLogout"
 import { useColorMode } from "./ui/color-mode"
+import { useCurrentUser } from "@/hooks/useCurrentUser"
 
 const SideBar = () => {
+	const logoutMutation = useLogout()
 	const activePath = useRouterState({
 		select: (state) => state.location.pathname,
 	})
+	const { data: currentUser } = useCurrentUser()
+
 	const { colorMode, toggleColorMode } = useColorMode()
 	return (
 		<Box shadow="md" width="100%" height="100%" backgroundColor="bg.primary">
@@ -51,6 +57,9 @@ const SideBar = () => {
 								<Switch.Label></Switch.Label>
 							</Switch.Root>
 						</Flex>
+						<Text mt={10}>
+							Hi, {currentUser?.firstName} {currentUser?.lastName}
+						</Text>
 					</Heading>
 
 					<List.Root
@@ -86,7 +95,12 @@ const SideBar = () => {
 				</Box>
 
 				{/* BOTTOM SECTION */}
-				<Button onClick={() => localStorage.removeItem("token")}>Logout</Button>
+				<Button
+					onClick={() => logoutMutation.mutate()}
+					loading={logoutMutation.isPending}
+					disabled={logoutMutation.isPending}>
+					Logout
+				</Button>
 			</Flex>
 		</Box>
 	)

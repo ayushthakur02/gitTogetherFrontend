@@ -71,7 +71,7 @@ const Signup = () => {
 		}
 
 		if (step === 1) {
-			fields = ["profilePic", "bio", "age", "gender"]
+			fields = ["profilePic", "age", "gender"]
 		}
 
 		if (step === 2) {
@@ -161,7 +161,7 @@ const Signup = () => {
 				<Flex
 					width="340px"
 					direction="column"
-					justify="eve"
+					justify="space-between"
 					p={10}
 					borderRight="1px solid"
 					borderColor="border.default"
@@ -176,7 +176,6 @@ const Signup = () => {
 							</Heading>
 						</HStack>
 						<Button
-							marginTop={"75%"}
 							alignSelf={"center"}
 							size="lg"
 							bg="button.githubBg"
