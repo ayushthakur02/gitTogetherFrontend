@@ -1,7 +1,6 @@
 import type { SignupStepProps } from "@/interfaces/signup.interfaces"
 
 import { Field, HStack, Input, TagsInput, VStack } from "@chakra-ui/react"
-
 import { Controller } from "react-hook-form"
 
 const SignupStepThree = ({ register, errors, control }: SignupStepProps) => {
@@ -16,7 +15,6 @@ const SignupStepThree = ({ register, errors, control }: SignupStepProps) => {
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />
-
 						{String(errors.country?.message || "")}
 					</Field.ErrorText>
 				</Field.Root>
@@ -28,7 +26,6 @@ const SignupStepThree = ({ register, errors, control }: SignupStepProps) => {
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />
-
 						{String(errors.state?.message || "")}
 					</Field.ErrorText>
 				</Field.Root>
@@ -43,7 +40,6 @@ const SignupStepThree = ({ register, errors, control }: SignupStepProps) => {
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />
-
 						{String(errors.city?.message || "")}
 					</Field.ErrorText>
 				</Field.Root>
@@ -59,7 +55,6 @@ const SignupStepThree = ({ register, errors, control }: SignupStepProps) => {
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />
-
 						{String(errors.phoneNumber?.message || "")}
 					</Field.ErrorText>
 				</Field.Root>
@@ -74,20 +69,19 @@ const SignupStepThree = ({ register, errors, control }: SignupStepProps) => {
 					name="skills"
 					render={({ field }) => (
 						<TagsInput.Root
-							value={field.value}
-							onValueChange={(e) => field.onChange(e.value)}>
-							<TagsInput.HiddenInput />
-
+							value={field.value ?? []}
+							onValueChange={(details) => field.onChange(details.value)}>
 							<TagsInput.Control>
-								<TagsInput.Input placeholder="React, Node, Java..." />
+								<TagsInput.Items />
+								<TagsInput.Input placeholder="Type a skill and press Enter..." />
 							</TagsInput.Control>
+							<TagsInput.HiddenInput />
 						</TagsInput.Root>
 					)}
 				/>
 
 				<Field.ErrorText>
 					<Field.ErrorIcon />
-
 					{String(errors.skills?.message || "")}
 				</Field.ErrorText>
 			</Field.Root>

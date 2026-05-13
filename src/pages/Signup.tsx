@@ -21,10 +21,11 @@ import {
 	VStack,
 } from "@chakra-ui/react"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import { FaCode, FaGithub } from "react-icons/fa"
-import { Link } from "@tanstack/react-router"
+import { Link, useNavigate } from "@tanstack/react-router"
+import { useSignup } from "@/hooks/useSignup"
 
 const Signup = () => {
 	const {
@@ -40,20 +41,42 @@ const Signup = () => {
 		mode: "onTouched",
 
 		reValidateMode: "onChange",
+
+		defaultValues: {
+			skills: [],
+			morePhotos: [],
+		},
 	})
 	const password = useWatch({
 		control,
 		name: "password",
 	})
+	const navigate = useNavigate()
+	const signupMutation = useSignup()
 
 	const [step, setStep] = useState(0)
 
-	useEffect(() => {
-		trigger("confirmPassword")
-	}, [password, trigger])
-
 	const onSubmit = (data: SignupFormData) => {
-		console.log(data)
+		signupMutation.mutate(
+			{
+				firstName: data?.firstName,
+				lastName: data?.lastName,
+				emailId: data?.emailId,
+				userName: data?.userName,
+				password: data?.password,
+				age: data?.age,
+				gender: data?.gender,
+				country: data?.country,
+				state: data?.state,
+				city: data?.city,
+				bio: data?.bio,
+				skills: data?.skills,
+				...(data.phoneNumber ? { phoneNumber: data?.phoneNumber } : {}),
+			},
+			{
+				onSuccess: () => navigate({ to: "/login" }),
+			},
+		)
 	}
 
 	const handleNext = async () => {
@@ -63,19 +86,19 @@ const Signup = () => {
 			fields = [
 				"firstName",
 				"lastName",
-				"username",
-				"email",
+				"userName",
+				"emailId",
 				"password",
 				"confirmPassword",
 			]
 		}
 
 		if (step === 1) {
-			fields = ["profilePic", "age", "gender"]
+			fields = ["age", "gender"]
 		}
 
 		if (step === 2) {
-			fields = ["country", "skills"]
+			fields = ["country"]
 		}
 
 		const valid = await trigger(fields)
@@ -93,7 +116,13 @@ const Signup = () => {
 		{
 			title: "Account",
 
-			component: <SignupStepOne register={register} errors={errors} />,
+			component: (
+				<SignupStepOne
+					register={register}
+					errors={errors}
+					password={password}
+				/>
+			),
 		},
 
 		{

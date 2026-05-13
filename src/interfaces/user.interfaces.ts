@@ -1,3 +1,21 @@
+export interface SignupPayload {
+	firstName: string
+	lastName: string
+	emailId: string
+	userName: string
+	password: string
+	age: number
+	gender: "male" | "female" | "others"
+	country: string
+	state?: string
+	city?: string
+	bio?: string
+	profilePic?: string
+	morePhotos?: string[]
+	skills?: string[]
+	phoneNumber?: string
+}
+
 export interface User {
 	_id: string
 	firstName: string
@@ -17,4 +35,29 @@ export interface User {
 	createdAt: string
 	updatedAt: string
 	__v: number
+}
+
+export interface UserFeed {
+	_id: string
+	firstName: string
+	lastName: string
+	userName: string
+	age: number
+	gender: string
+	country: string
+	state: string
+	city: string
+	bio: string
+	profilePic: string
+	morePhotos: string[]
+	skills: string[]
+}
+
+export interface FeedResponse {
+	message: string
+	total: number
+	pageTotal: number
+	data: UserFeed[]
+	limit: number
+	page: number
 }

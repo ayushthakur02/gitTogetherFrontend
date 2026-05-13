@@ -9,10 +9,8 @@ import type { SignupFormData } from "@/schemas/signupSchema"
 
 export interface SignupStepProps {
 	register: UseFormRegister<SignupFormData>
-
 	errors: FieldErrors<SignupFormData>
-
 	setValue?: UseFormSetValue<SignupFormData>
-
 	control?: Control<SignupFormData>
+	password?: string
 }

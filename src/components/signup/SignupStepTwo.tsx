@@ -33,11 +33,8 @@ const SignupStepTwo = ({
 	return (
 		<VStack align="stretch" gap={4} width="100%">
 			{/* PROFILE PICTURE */}
-			<Field.Root required invalid={!!errors.profilePic}>
-				<Field.Label>
-					Profile Picture
-					<Field.RequiredIndicator />
-				</Field.Label>
+			<Field.Root invalid={!!errors.profilePic}>
+				<Field.Label>Profile Picture</Field.Label>
 
 				<FileUpload.Root
 					accept="image/*"
@@ -164,7 +161,7 @@ const SignupStepTwo = ({
 
 									<option value="female">Female</option>
 
-									<option value="other">Other</option>
+									<option value="others">Others</option>
 								</NativeSelect.Field>
 							</NativeSelect.Root>
 						)}

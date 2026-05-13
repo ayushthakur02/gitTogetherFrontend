@@ -2,7 +2,7 @@ import type { SignupStepProps } from "@/interfaces/signup.interfaces"
 
 import { Field, HStack, Input, VStack } from "@chakra-ui/react"
 
-const SignupStepOne = ({ register, errors }: SignupStepProps) => {
+const SignupStepOne = ({ register, errors, password }: SignupStepProps) => {
 	return (
 		<VStack align="stretch" gap={4}>
 			<HStack>
@@ -16,7 +16,6 @@ const SignupStepOne = ({ register, errors }: SignupStepProps) => {
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />
-
 						{errors.firstName?.message}
 					</Field.ErrorText>
 				</Field.Root>
@@ -31,29 +30,27 @@ const SignupStepOne = ({ register, errors }: SignupStepProps) => {
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />
-
 						{errors.lastName?.message}
 					</Field.ErrorText>
 				</Field.Root>
 			</HStack>
 
 			<HStack>
-				<Field.Root required invalid={!!errors.username}>
+				<Field.Root required invalid={!!errors.userName}>
 					<Field.Label>
 						Username
 						<Field.RequiredIndicator />
 					</Field.Label>
 
-					<Input placeholder="johndoe" {...register("username")} />
+					<Input placeholder="johndoe" {...register("userName")} />
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />
-
-						{errors.username?.message}
+						{errors.userName?.message}
 					</Field.ErrorText>
 				</Field.Root>
 
-				<Field.Root required invalid={!!errors.email}>
+				<Field.Root required invalid={!!errors.emailId}>
 					<Field.Label>
 						Email
 						<Field.RequiredIndicator />
@@ -62,13 +59,12 @@ const SignupStepOne = ({ register, errors }: SignupStepProps) => {
 					<Input
 						type="email"
 						placeholder="Enter your email"
-						{...register("email")}
+						{...register("emailId")}
 					/>
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />
-
-						{errors.email?.message}
+						{errors.emailId?.message}
 					</Field.ErrorText>
 				</Field.Root>
 			</HStack>
@@ -84,7 +80,6 @@ const SignupStepOne = ({ register, errors }: SignupStepProps) => {
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />
-
 						{errors.password?.message}
 					</Field.ErrorText>
 				</Field.Root>
@@ -95,7 +90,13 @@ const SignupStepOne = ({ register, errors }: SignupStepProps) => {
 						<Field.RequiredIndicator />
 					</Field.Label>
 
-					<Input type="password" {...register("confirmPassword")} />
+					<Input
+						type="password"
+						{...register("confirmPassword", {
+							validate: (val) =>
+								val === password || "Passwords do not match",
+						})}
+					/>
 
 					<Field.ErrorText>
 						<Field.ErrorIcon />

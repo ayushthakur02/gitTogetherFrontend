@@ -1,8 +1,16 @@
 import axiosInstance from "@/lib/axios"
+import type { SignupPayload } from "@/interfaces/user.interfaces"
 
 interface LoginPayload {
 	userId: string
 	password: string
+}
+
+export const signupUser = async (data: SignupPayload) => {
+	const response = await axiosInstance.post("/auth/signup", data, {
+		withCredentials: true,
+	})
+	return response.data
 }
 
 export const loginUser = async (data: LoginPayload) => {
