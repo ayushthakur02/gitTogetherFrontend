@@ -25,7 +25,7 @@ import { useState } from "react"
 
 import { FaCode, FaGithub } from "react-icons/fa"
 import { Link, useNavigate } from "@tanstack/react-router"
-import { useSignup } from "@/hooks/useSignup"
+import { useSignup } from "@/hooks/useAuth"
 
 const Signup = () => {
 	const {

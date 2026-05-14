@@ -1,4 +1,4 @@
-import type { SignupStepProps } from "@/interfaces/signup.interfaces"
+import type { SignupStepProps } from "@/interfaces/auth.interfaces"
 
 import { Field, HStack, Input, VStack } from "@chakra-ui/react"
 
@@ -93,8 +93,7 @@ const SignupStepOne = ({ register, errors, password }: SignupStepProps) => {
 					<Input
 						type="password"
 						{...register("confirmPassword", {
-							validate: (val) =>
-								val === password || "Passwords do not match",
+							validate: (val) => val === password || "Passwords do not match",
 						})}
 					/>
 

@@ -20,7 +20,7 @@ import FileUploadList from "../FileUploadList"
 
 import { ERROR_MESSAGES, ERRORS } from "@/constants/signupConstants"
 
-import type { SignupStepProps } from "@/interfaces/signup.interfaces"
+import type { SignupStepProps } from "@/interfaces/auth.interfaces"
 
 const SignupStepTwo = ({
 	register,

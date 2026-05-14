@@ -13,9 +13,9 @@ import {
 
 import { Link, useRouterState } from "@tanstack/react-router"
 import { FaMoon, FaSun } from "react-icons/fa"
-import { useLogout } from "@/hooks/useLogout"
+import { useLogout } from "@/hooks/useAuth"
 import { useColorMode } from "./ui/color-mode"
-import { useCurrentUser } from "@/hooks/useCurrentUser"
+import { useCurrentUser } from "@/hooks/useAuth"
 
 const SideBar = () => {
 	const logoutMutation = useLogout()

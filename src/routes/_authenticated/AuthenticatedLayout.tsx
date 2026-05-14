@@ -1,7 +1,7 @@
 import SideBar from "@/components/SideBar"
 import { Box, Flex } from "@chakra-ui/react"
 import { Outlet } from "@tanstack/react-router"
-import { useCurrentUser } from "@/hooks/useCurrentUser"
+import { useCurrentUser } from "@/hooks/useAuth"
 
 const AuthenticatedLayout = () => {
 	useCurrentUser()

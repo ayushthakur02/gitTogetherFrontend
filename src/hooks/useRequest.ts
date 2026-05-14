@@ -1,16 +1,22 @@
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 
-import { signupUser } from "../api/auth"
+import { sendRequest } from "../api/request"
 import toaster from "../components/ui/toaster"
+import type {
+	sendRequestPayload,
+	sendRequestResponse,
+} from "@/interfaces/request.interfaces"
 
-export const useSignup = () => {
+export const useSendRequest = () => {
 	return useMutation({
-		mutationFn: signupUser,
+		mutationFn: (params: sendRequestPayload) =>
+			sendRequest(params.status, params.recipientID),
 
-		onSuccess: () => {
+		onSuccess: (data: sendRequestResponse) => {
+			const message = data?.message
 			toaster.create({
-				title: "Welcome back!",
+				title: message,
 				type: "success",
 				duration: 3000,
 			})
@@ -22,7 +28,7 @@ export const useSignup = () => {
 				: "Something went wrong"
 
 			toaster.create({
-				title: "Signup Failed",
+				title: "Action Failed",
 				description: message,
 				type: "error",
 			})

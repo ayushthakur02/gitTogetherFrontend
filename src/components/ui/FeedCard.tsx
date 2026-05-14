@@ -1,47 +1,141 @@
-import type { UserFeed } from "@/interfaces/user.interfaces"
-import { Badge, Button, Card, Flex, HStack, Image, Text } from "@chakra-ui/react"
+import type { FeedCardProps } from "@/interfaces/feed.interfaces"
+import {
+	Badge,
+	Box,
+	Button,
+	HStack,
+	Icon,
+	Text,
+	VStack,
+} from "@chakra-ui/react"
+import {
+	animate,
+	motion,
+	useMotionValue,
+	useTransform,
+	type PanInfo,
+} from "framer-motion"
+import { FaCodePullRequest } from "react-icons/fa6"
+import { IoClose, IoLocationSharp } from "react-icons/io5"
+import PhotoCarousel from "./PhotoCarousel"
+import { ExternalLink } from "lucide-react"
 
-interface FeedCardProps {
-	user: UserFeed
-}
+const CARD_WIDTH = 340
+const CARD_HEIGHT = 560
 
-const FeedCard = ({ user }: FeedCardProps) => {
+const FeedCard = ({ user, onSwipe, motionX }: FeedCardProps) => {
+	const xInternal = useMotionValue(0)
+	const x = motionX ?? xInternal
+	const cardRotate = useTransform(x, [-300, 0, 300], [-12, 0, 12])
+
+	const photos = [user.profilePic, ...(user.morePhotos ?? [])].filter(Boolean)
+
+	const handleDragEnd = (
+		_e: MouseEvent | TouchEvent | PointerEvent,
+		info: PanInfo,
+	) => {
+		if (info.offset.x < -100) onSwipe("dismissed")
+		else if (info.offset.x > 100) onSwipe("starred")
+		else animate(x, 0, { type: "spring", stiffness: 500, damping: 30 })
+	}
+
 	return (
-		<Card.Root maxW="sm" overflow="hidden">
-			<Image src={user.profilePic} alt={user.firstName} />
+		<motion.div
+			style={{ x, rotate: cardRotate, cursor: "grab" }}
+			drag="x"
+			dragConstraints={{ left: 0, right: 0 }}
+			dragElastic={0.8}
+			onDragEnd={handleDragEnd}
+			whileDrag={{ cursor: "grabbing" }}>
+			<Box
+				width={`${CARD_WIDTH}px`}
+				height={`${CARD_HEIGHT}px`}
+				borderRadius="2xl"
+				overflow="hidden"
+				boxShadow="xl"
+				position="relative"
+				bg="bg.secondary"
+				border="1px solid"
+				borderColor="border.default">
+				{/* Photo carousel — top 60% */}
+				<Box height="60%">
+					<PhotoCarousel photos={photos} name={user.firstName} />
+				</Box>
 
-			<Card.Body gap="3">
-				<Flex justify="space-between" align="center">
-					<Card.Title>
-						{user.firstName} {user.lastName}, {user.age}
-					</Card.Title>
-					<Text fontSize="sm" color="text.secondary">
-						{user.city}, {user.country}
-					</Text>
-				</Flex>
+				{/* Info section — bottom 40% */}
+				<VStack
+					align="stretch"
+					gap={2}
+					px={4}
+					pb={3}
+					height="40%"
+					justify="space-between">
+					<Box>
+						<Text
+							fontWeight="bold"
+							fontSize="xl"
+							color="text.primary"
+							lineClamp={1}>
+							{user.firstName} {user.lastName}, {user.age}
+						</Text>
+						<HStack gap={1} mt={0.5}>
+							<Icon as={IoLocationSharp} color="text.secondary" boxSize={3.5} />
+							<Text fontSize="xs" color="text.secondary" lineClamp={1}>
+								{[user.city, user.state, user.country]
+									.filter(Boolean)
+									.join(", ")}
+							</Text>
+						</HStack>
+					</Box>
 
-				<Text fontSize="sm" color="text.secondary">
-					{user.bio}
-				</Text>
+					{user.bio && (
+						<Text fontSize="sm" color="text.secondary" lineClamp={2}>
+							{user.bio}
+						</Text>
+					)}
 
-				<HStack flexWrap="wrap" gap={2}>
-					{user.skills.map((skill) => (
-						<Badge key={skill} colorPalette="blue" variant="subtle">
-							{skill}
-						</Badge>
-					))}
-				</HStack>
-			</Card.Body>
+					{user.skills?.length > 0 && (
+						<HStack flexWrap="wrap" gap={1.5}>
+							{user.skills.slice(0, 4).map((skill) => (
+								<Badge
+									key={skill}
+									colorPalette="blue"
+									variant="subtle"
+									fontSize="xs">
+									{skill}
+								</Badge>
+							))}
+							{user.skills.length > 4 && (
+								<Badge colorPalette="gray" variant="subtle" fontSize="xs">
+									+{user.skills.length - 4}
+								</Badge>
+							)}
+						</HStack>
+					)}
 
-			<Card.Footer gap="2">
-				<Button flex={1} variant="outline" colorPalette="red">
-					Pass
-				</Button>
-				<Button flex={1} colorPalette="green">
-					Connect
-				</Button>
-			</Card.Footer>
-		</Card.Root>
+					<HStack justify="center" gap={6}>
+						<Button
+							variant="outline"
+							colorPalette="red"
+							borderRadius="full"
+							size="lg"
+							onClick={() => onSwipe("dismissed")}>
+							<Icon as={IoClose} />
+						</Button>
+						<Button borderRadius="full" size="lg">
+							<Icon as={ExternalLink} />
+						</Button>
+						<Button
+							colorPalette="green"
+							borderRadius="full"
+							size="lg"
+							onClick={() => onSwipe("starred")}>
+							<Icon as={FaCodePullRequest} />
+						</Button>
+					</HStack>
+				</VStack>
+			</Box>
+		</motion.div>
 	)
 }
 

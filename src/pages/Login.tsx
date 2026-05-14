@@ -1,4 +1,4 @@
-import { useLogin } from "@/hooks/useLogin"
+import { useLogin } from "@/hooks/useAuth"
 import { loginSchema, type LoginFormData } from "@/schemas/loginSchema"
 import {
 	Box,
@@ -181,8 +181,7 @@ const Login = () => {
 									color="text.primary"
 									_focusVisible={{
 										borderColor: "brand.secondary",
-										boxShadow:
-											"0 0 0 1px var(--chakra-colors-brand-secondary)",
+										boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
 									}}
 									{...register("userId")}
 								/>
@@ -200,10 +199,7 @@ const Login = () => {
 										Password
 									</Text>
 
-									<Text
-										color="brand.secondary"
-										fontSize="sm"
-										cursor="pointer">
+									<Text color="brand.secondary" fontSize="sm" cursor="pointer">
 										Forgot Password?
 									</Text>
 								</Flex>
@@ -216,8 +212,7 @@ const Login = () => {
 									color="text.primary"
 									_focusVisible={{
 										borderColor: "brand.secondary",
-										boxShadow:
-											"0 0 0 1px var(--chakra-colors-brand-secondary)",
+										boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
 									}}
 									{...register("password")}
 								/>

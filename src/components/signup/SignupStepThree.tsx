@@ -1,4 +1,4 @@
-import type { SignupStepProps } from "@/interfaces/signup.interfaces"
+import type { SignupStepProps } from "@/interfaces/auth.interfaces"
 
 import { Field, HStack, Input, TagsInput, VStack } from "@chakra-ui/react"
 import { Controller } from "react-hook-form"
