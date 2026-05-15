@@ -24,6 +24,7 @@ import {
 import { useState } from "react"
 
 import { FaCode, FaGithub } from "react-icons/fa"
+import toaster from "@/components/ui/toaster"
 import { Link, useNavigate } from "@tanstack/react-router"
 import { useSignup } from "@/hooks/useAuth"
 
@@ -74,7 +75,10 @@ const Signup = () => {
 				...(data.phoneNumber ? { phoneNumber: data?.phoneNumber } : {}),
 			},
 			{
-				onSuccess: () => navigate({ to: "/login" }),
+				onSuccess: async () => {
+				await navigate({ to: "/login" })
+				toaster.create({ title: "Account created! Please log in.", type: "success", duration: 3000 })
+			},
 			},
 		)
 	}

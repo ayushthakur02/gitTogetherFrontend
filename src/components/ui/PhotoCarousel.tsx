@@ -1,22 +1,22 @@
 import type { PhotoCarouselProps } from "@/interfaces/feed.interfaces"
 import { Box, Carousel, HStack, Image } from "@chakra-ui/react"
 
-const PhotoCarousel = ({ photos, name }: PhotoCarouselProps) => {
+const PhotoCarousel = ({ photos, name, height, objectFit = "cover" }: PhotoCarouselProps) => {
 	return (
-		<Box height="100%" position="relative">
+		<Box height={height} position="relative">
 			<Carousel.Root
 				slideCount={photos.length}
-				height="100%"
+				height={height}
 				css={{ "--slide-spacing": "0px" }}>
-				<Carousel.ItemGroup height="100%">
+				<Carousel.ItemGroup height={height}>
 					{photos.map((photo, i) => (
-						<Carousel.Item key={i} index={i} height="100%">
+						<Carousel.Item key={i} index={i} height={height}>
 							<Image
 								src={photo}
 								alt={`${name} photo ${i + 1}`}
 								width="100%"
-								height="100%"
-								objectFit="cover"
+								height={height}
+								objectFit={objectFit}
 								draggable={false}
 							/>
 						</Carousel.Item>

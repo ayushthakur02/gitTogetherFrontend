@@ -23,12 +23,19 @@ import { ExternalLink } from "lucide-react"
 const CARD_WIDTH = 340
 const CARD_HEIGHT = 560
 
-const FeedCard = ({ user, onSwipe, motionX }: FeedCardProps) => {
+const FeedCard = ({
+	user,
+	onSwipe,
+	motionX,
+	setIsDrawerOpen,
+}: FeedCardProps) => {
 	const xInternal = useMotionValue(0)
 	const x = motionX ?? xInternal
 	const cardRotate = useTransform(x, [-300, 0, 300], [-12, 0, 12])
 
-	const photos = [user.profilePic, ...(user.morePhotos ?? [])].filter(Boolean)
+	const photos = [user.profilePic, ...(user.morePhotos ?? [])].filter(
+		(p): p is string => !!p,
+	)
 
 	const handleDragEnd = (
 		_e: MouseEvent | TouchEvent | PointerEvent,
@@ -59,7 +66,7 @@ const FeedCard = ({ user, onSwipe, motionX }: FeedCardProps) => {
 				borderColor="border.default">
 				{/* Photo carousel — top 60% */}
 				<Box height="60%">
-					<PhotoCarousel photos={photos} name={user.firstName} />
+					<PhotoCarousel photos={photos} name={user.firstName} height="336px" />
 				</Box>
 
 				{/* Info section — bottom 40% */}
@@ -122,7 +129,10 @@ const FeedCard = ({ user, onSwipe, motionX }: FeedCardProps) => {
 							onClick={() => onSwipe("dismissed")}>
 							<Icon as={IoClose} />
 						</Button>
-						<Button borderRadius="full" size="lg">
+						<Button
+							borderRadius="full"
+							size="lg"
+							onClick={() => setIsDrawerOpen(true)}>
 							<Icon as={ExternalLink} />
 						</Button>
 						<Button

@@ -21,11 +21,6 @@ export const useLogin = () => {
 		onSuccess: (data) => {
 			localStorage.setItem("isLoggedIn", "true")
 			queryClient.setQueryData<User>(["currentUser"], data)
-			toaster.create({
-				title: "Welcome back!",
-				type: "success",
-				duration: 3000,
-			})
 		},
 
 		onError: (error) => {
@@ -45,14 +40,6 @@ export const useLogin = () => {
 export const useSignup = () => {
 	return useMutation({
 		mutationFn: signupUser,
-
-		onSuccess: () => {
-			toaster.create({
-				title: "Welcome back!",
-				type: "success",
-				duration: 3000,
-			})
-		},
 
 		onError: (error) => {
 			const message = axios.isAxiosError(error)
@@ -74,14 +61,14 @@ export const useLogout = () => {
 	return useMutation({
 		mutationFn: logoutUser,
 
-		onSuccess: () => {
+		onSuccess: async () => {
 			localStorage.removeItem("isLoggedIn")
+			await navigate({ to: "/login" })
 			toaster.create({
 				title: "Logged out successfully",
 				type: "success",
 				duration: 2000,
 			})
-			navigate({ to: "/login" })
 		},
 
 		onError: () => {

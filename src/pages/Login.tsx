@@ -1,3 +1,4 @@
+import toaster from "@/components/ui/toaster"
 import { useLogin } from "@/hooks/useAuth"
 import { loginSchema, type LoginFormData } from "@/schemas/loginSchema"
 import {
@@ -32,7 +33,10 @@ const Login = () => {
 
 	const onSubmit = (data: LoginFormData) => {
 		loginMutation.mutate(data, {
-			onSuccess: () => navigate({ to: "/feed" }),
+			onSuccess: async () => {
+				await navigate({ to: "/feed" })
+				toaster.create({ title: "Welcome back!", type: "success", duration: 3000 })
+			},
 		})
 	}
 

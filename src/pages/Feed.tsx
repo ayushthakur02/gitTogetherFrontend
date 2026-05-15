@@ -1,3 +1,4 @@
+import DetailDrawer from "@/components/ui/DetailDrawer"
 import FeedCard from "@/components/ui/FeedCard"
 import { useSendRequest } from "@/hooks/useRequest"
 import { useUserFeed } from "@/hooks/useUser"
@@ -11,6 +12,8 @@ import { IoClose } from "react-icons/io5"
 const Feed = () => {
 	const { data, isLoading, isError, isFetching, refetch } = useUserFeed()
 	const [currentIndex, setCurrentIndex] = useState(0)
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+	const currentUser = data?.data[currentIndex]
 	const [pendingDirection, setPendingDirection] = useState<
 		"left" | "right" | null
 	>(null)
@@ -29,7 +32,6 @@ const Feed = () => {
 				: window.innerWidth * 1.5
 		await animate(x, target, { type: "tween", duration: 0.35, ease: "easeIn" })
 
-		const currentUser = data?.data[currentIndex]
 		if (currentUser) {
 			requestMutation.mutate(
 				{ status, recipientID: currentUser._id },
@@ -110,7 +112,6 @@ const Feed = () => {
 		)
 	}
 
-	const currentUser = data?.data[currentIndex]
 	const nextUser = data?.data[currentIndex + 1]
 
 	if (!currentUser) {
@@ -204,6 +205,7 @@ const Feed = () => {
 							key={`next-${nextUser._id}`}
 							user={nextUser}
 							onSwipe={() => {}}
+							setIsDrawerOpen={() => {}}
 						/>
 					</motion.div>
 				)}
@@ -214,8 +216,17 @@ const Feed = () => {
 					user={currentUser}
 					onSwipe={triggerSwipe}
 					motionX={x}
+					setIsDrawerOpen={setIsDrawerOpen}
 				/>
 			</div>
+			{currentUser?._id && (
+				<DetailDrawer
+					id={currentUser?._id}
+					setIsDrawerOpen={setIsDrawerOpen}
+					isDrawerOpen={isDrawerOpen}
+					onSwipe={triggerSwipe}
+				/>
+			)}
 		</Flex>
 	)
 }
