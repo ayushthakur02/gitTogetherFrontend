@@ -70,7 +70,7 @@ const SideBar = () => {
 						gap={3}>
 						{SIDEBAR_ITEMS.map((item) => {
 							return (
-								<Link to={item.path} key={item.id}>
+								<Link to={item.path as never} key={item.id}>
 									<List.Item
 										cursor="pointer"
 										backgroundColor={

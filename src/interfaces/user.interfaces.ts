@@ -59,3 +59,58 @@ export interface UserDetailResponse {
 	morePhotos: string[]
 	skills: string[]
 }
+
+export interface UserRequest {
+	requestID: string
+	initiatorID: string
+	recipientID: string
+	firstName: string
+	lastName: string
+	age: number
+	gender: string
+	country: string
+	state: string
+	city: string
+	profilePic: string
+	skills: string[]
+	createdAt: string
+}
+
+export interface UserRequestsListResponse {
+	message: string
+	total: number
+	data: UserRequest[]
+}
+
+export interface UserMatch {
+	_id: string
+	firstName: string
+	lastName: string
+	userName?: string
+	age: number
+	gender: string
+	country: string
+	state: string
+	city: string
+	profilePic: string
+	skills: string[]
+}
+
+export interface UserMatchesResponse {
+	message: string
+	total: number
+	pageTotal: number
+	data: UserMatch[]
+	limit: number
+	page: number
+}
+
+export interface UserFeedPayload {
+	page: number
+	limit: number
+}
+
+export interface UserRequestsPayload {
+	page: number
+	limit: number
+}

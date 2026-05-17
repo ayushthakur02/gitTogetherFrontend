@@ -16,9 +16,9 @@ import {
 	type PanInfo,
 } from "framer-motion"
 import { FaCodePullRequest } from "react-icons/fa6"
+import { FaExpandArrowsAlt } from "react-icons/fa"
 import { IoClose, IoLocationSharp } from "react-icons/io5"
 import PhotoCarousel from "./PhotoCarousel"
-import { ExternalLink } from "lucide-react"
 
 const CARD_WIDTH = 340
 const CARD_HEIGHT = 560
@@ -133,7 +133,7 @@ const FeedCard = ({
 							borderRadius="full"
 							size="lg"
 							onClick={() => setIsDrawerOpen(true)}>
-							<Icon as={ExternalLink} />
+							<Icon as={FaExpandArrowsAlt} />
 						</Button>
 						<Button
 							colorPalette="green"

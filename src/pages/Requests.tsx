@@ -1,6 +1,7 @@
 import ProfileCard from "@/components/ui/ProfileCard"
 import DetailDrawer from "@/components/ui/DetailDrawer"
-import { useUserMatches } from "@/hooks/useUser"
+import { useUserRequestsList } from "@/hooks/useUser"
+import { useSendRequest } from "@/hooks/useRequest"
 import {
 	Box,
 	Button,
@@ -10,17 +11,34 @@ import {
 	Spinner,
 	Text,
 } from "@chakra-ui/react"
-import { MessageSquare } from "lucide-react"
+import { Check, X } from "lucide-react"
 import { useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 
 const LIMIT = 12
 
-const Matches = () => {
+const Requests = () => {
 	const [page, setPage] = useState(1)
 	const [drawerUserId, setDrawerUserId] = useState<string | null>(null)
-	const { data, isLoading, isError } = useUserMatches(page, LIMIT)
+	const { data, isLoading, isError } = useUserRequestsList(page, LIMIT)
+	const requestMutation = useSendRequest()
+	const queryClient = useQueryClient()
 
-	const totalPages = data?.pageTotal ?? 1
+	const totalPages = Math.ceil((data?.total ?? 0) / LIMIT) || 1
+
+	const handleAction = (
+		status: "starred" | "dismissed",
+		initiatorID: string,
+	) => {
+		requestMutation.mutate(
+			{ status, recipientID: initiatorID },
+			{
+				onSettled: () => {
+					queryClient.invalidateQueries({ queryKey: ["requests"] })
+				},
+			},
+		)
+	}
 
 	if (isLoading) {
 		return (
@@ -33,19 +51,27 @@ const Matches = () => {
 	if (isError) {
 		return (
 			<Flex height="100%" justifyContent="center" alignItems="center">
-				<Text color="text.secondary">Failed to load matches. Please try again.</Text>
+				<Text color="text.secondary">
+					Failed to load requests. Please try again.
+				</Text>
 			</Flex>
 		)
 	}
 
 	if (!data?.data.length) {
 		return (
-			<Flex height="100%" justifyContent="center" alignItems="center" direction="column" gap={3}>
+			<Flex
+				height="100%"
+				justifyContent="center"
+				alignItems="center"
+				direction="column"
+				gap={3}>
 				<Text fontSize="xl" color="text.primary" fontWeight="semibold">
-					No matches yet!
+					No pending requests!
 				</Text>
 				<Text color="text.secondary">
-					Keep swiping on the Feed to find your perfect technical match.
+					You're all caught up. Keep swiping on the Feed to find more
+					developers.
 				</Text>
 			</Flex>
 		)
@@ -57,15 +83,14 @@ const Matches = () => {
 			<Box mb={6}>
 				<HStack gap={3} align="baseline">
 					<Text fontSize="3xl" fontWeight="bold" color="text.primary">
-						Matched Repos
+						Pending Requests
 					</Text>
 					<Text fontSize="lg" color="brand.secondary" fontWeight="semibold">
 						({data.total})
 					</Text>
 				</HStack>
 				<Text color="text.secondary" mt={1}>
-					These are the developers who branched into your heart. Start a pull
-					request to initiate a conversation.
+					These developers starred your profile. Accept to start collaborating.
 				</Text>
 			</Box>
 
@@ -74,21 +99,28 @@ const Matches = () => {
 				templateColumns="repeat(auto-fill, minmax(220px, 1fr))"
 				gap={4}
 				mb={8}>
-				{data.data.map((match) => (
+				{data.data.map((request) => (
 					<ProfileCard
-						key={match._id}
-						user={match}
+						key={request.requestID}
+						user={request}
 						actions={[
 							{
 								label: "Profile",
 								variant: "outline",
-								onClick: () => setDrawerUserId(match._id),
+								onClick: () => setDrawerUserId(request.initiatorID),
 							},
 							{
-								label: "Chat",
-								colorPalette: "blue",
-								icon: <MessageSquare size={14} />,
-								onClick: () => {},
+								label: "Decline",
+								variant: "outline",
+								colorPalette: "red",
+								icon: <X size={14} />,
+								onClick: () => handleAction("dismissed", request.initiatorID),
+							},
+							{
+								label: "Accept",
+								colorPalette: "green",
+								icon: <Check size={14} />,
+								onClick: () => handleAction("starred", request.initiatorID),
 							},
 						]}
 					/>
@@ -121,11 +153,11 @@ const Matches = () => {
 					id={drawerUserId}
 					isDrawerOpen={!!drawerUserId}
 					setIsDrawerOpen={(open) => !open && setDrawerUserId(null)}
-					onSwipe={() => {}}
+					onSwipe={(status) => handleAction(status, drawerUserId)}
 				/>
 			)}
 		</Box>
 	)
 }
 
-export default Matches
+export default Requests
