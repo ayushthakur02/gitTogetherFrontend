@@ -25,6 +25,7 @@ export const SIDEBAR_ITEMS = [
 		name: "Chats",
 		path: "/chats",
 		icon: <MessageSquareHeart />,
+		disabled: true,
 	},
 	{
 		id: 5,

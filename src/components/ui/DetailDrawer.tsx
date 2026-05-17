@@ -23,6 +23,7 @@ const DetailDrawer = ({
 	setIsDrawerOpen,
 	isDrawerOpen,
 	onSwipe,
+	hideActions = false,
 }: DetailDrawerProps) => {
 	const { data, isLoading } = useUserDetail(isDrawerOpen ? id : "")
 	const photos = [data?.profilePic, ...(data?.morePhotos ?? [])].filter(
@@ -167,29 +168,31 @@ const DetailDrawer = ({
 
 							</VStack>
 						</Drawer.Body>
-						<Drawer.Footer justifyContent="center" gap={6}>
-							<Button
-								variant="outline"
-								colorPalette="red"
-								borderRadius="full"
-								size="lg"
-								onClick={() => {
-									setIsDrawerOpen(false)
-									onSwipe("dismissed")
-								}}>
-								<Icon as={IoClose} />
-							</Button>
-							<Button
-								colorPalette="green"
-								borderRadius="full"
-								size="lg"
-								onClick={() => {
-									setIsDrawerOpen(false)
-									onSwipe("starred")
-								}}>
-								<Icon as={FaCodePullRequest} />
-							</Button>
-						</Drawer.Footer>
+						{!hideActions && (
+							<Drawer.Footer justifyContent="center" gap={6}>
+								<Button
+									variant="outline"
+									colorPalette="red"
+									borderRadius="full"
+									size="lg"
+									onClick={() => {
+										setIsDrawerOpen(false)
+										onSwipe("dismissed")
+									}}>
+									<Icon as={IoClose} />
+								</Button>
+								<Button
+									colorPalette="green"
+									borderRadius="full"
+									size="lg"
+									onClick={() => {
+										setIsDrawerOpen(false)
+										onSwipe("starred")
+									}}>
+									<Icon as={FaCodePullRequest} />
+								</Button>
+							</Drawer.Footer>
+						)}
 					</Drawer.Content>
 				</Drawer.Positioner>
 			</Portal>

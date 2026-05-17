@@ -20,6 +20,7 @@ const LIMIT = 12
 const Requests = () => {
 	const [page, setPage] = useState(1)
 	const [drawerUserId, setDrawerUserId] = useState<string | null>(null)
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 	const { data, isLoading, isError } = useUserRequestsList(page, LIMIT)
 	const requestMutation = useSendRequest()
 	const queryClient = useQueryClient()
@@ -107,7 +108,7 @@ const Requests = () => {
 							{
 								label: "Profile",
 								variant: "outline",
-								onClick: () => setDrawerUserId(request.initiatorID),
+								onClick: () => { setDrawerUserId(request.initiatorID); setIsDrawerOpen(true) },
 							},
 							{
 								label: "Decline",
@@ -148,14 +149,12 @@ const Requests = () => {
 				</Button>
 			</HStack>
 
-			{drawerUserId && (
-				<DetailDrawer
-					id={drawerUserId}
-					isDrawerOpen={!!drawerUserId}
-					setIsDrawerOpen={(open) => !open && setDrawerUserId(null)}
-					onSwipe={(status) => handleAction(status, drawerUserId)}
-				/>
-			)}
+			<DetailDrawer
+				id={drawerUserId ?? ""}
+				isDrawerOpen={isDrawerOpen}
+				setIsDrawerOpen={setIsDrawerOpen}
+				onSwipe={(status) => handleAction(status, drawerUserId ?? "")}
+			/>
 		</Box>
 	)
 }

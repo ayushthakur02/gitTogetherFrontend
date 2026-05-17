@@ -1,5 +1,6 @@
 import { SIDEBAR_ITEMS } from "@/constants/sidebarConstants"
 import {
+	Badge,
 	Box,
 	Button,
 	Center,
@@ -69,6 +70,37 @@ const SideBar = () => {
 						flexDirection="column"
 						gap={3}>
 						{SIDEBAR_ITEMS.map((item) => {
+							if (item.disabled) {
+								return (
+									<List.Item
+										key={item.id}
+										cursor="not-allowed"
+										backgroundColor="transparent"
+										color="text.disabled"
+										padding={2}
+										borderRadius={4}
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+										opacity={0.5}>
+										<Flex align="center">
+											<Icon size="sm" alignSelf="center" marginRight={3}>
+												{item.icon}
+											</Icon>
+											<Center>{item.name}</Center>
+										</Flex>
+										<Badge
+											colorPalette="blue"
+											variant="subtle"
+											fontSize="2xs"
+											px={1.5}
+											py={0.5}>
+											Soon
+										</Badge>
+									</List.Item>
+								)
+							}
+
 							return (
 								<Link to={item.path as never} key={item.id}>
 									<List.Item

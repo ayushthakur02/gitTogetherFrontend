@@ -57,28 +57,50 @@ const Signup = () => {
 
 	const [step, setStep] = useState(0)
 
-	const onSubmit = (data: SignupFormData) => {
+	const onSubmit = async (data: SignupFormData) => {
+		const fileToBase64 = (file: File): Promise<string> =>
+			new Promise((resolve, reject) => {
+				const reader = new FileReader()
+				reader.readAsDataURL(file)
+				reader.onload = () => resolve(reader.result as string)
+				reader.onerror = reject
+			})
+
+		let profilePic: string | undefined
+		if (data.profilePic instanceof File) {
+			profilePic = await fileToBase64(data.profilePic)
+		}
+
+		let morePhotos: string[] | undefined
+		if (Array.isArray(data.morePhotos) && data.morePhotos.length > 0) {
+			morePhotos = await Promise.all(
+				(data.morePhotos as File[]).map(fileToBase64),
+			)
+		}
+
 		signupMutation.mutate(
 			{
-				firstName: data?.firstName,
-				lastName: data?.lastName,
-				emailId: data?.emailId,
-				userName: data?.userName,
-				password: data?.password,
-				age: data?.age,
-				gender: data?.gender,
-				country: data?.country,
-				state: data?.state,
-				city: data?.city,
-				bio: data?.bio,
-				skills: data?.skills,
-				...(data.phoneNumber ? { phoneNumber: data?.phoneNumber } : {}),
+				firstName: data.firstName,
+				lastName: data.lastName,
+				emailId: data.emailId,
+				userName: data.userName,
+				password: data.password,
+				age: data.age,
+				gender: data.gender,
+				country: data.country,
+				state: data.state,
+				city: data.city,
+				bio: data.bio,
+				skills: data.skills,
+				...(profilePic ? { profilePic } : {}),
+				...(morePhotos ? { morePhotos } : {}),
+				...(data.phoneNumber ? { phoneNumber: data.phoneNumber } : {}),
 			},
 			{
 				onSuccess: async () => {
-				await navigate({ to: "/login" })
-				toaster.create({ title: "Account created! Please log in.", type: "success", duration: 3000 })
-			},
+					await navigate({ to: "/login" })
+					toaster.create({ title: "Account created! Please log in.", type: "success", duration: 3000 })
+				},
 			},
 		)
 	}

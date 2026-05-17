@@ -18,6 +18,7 @@ const LIMIT = 12
 const Matches = () => {
 	const [page, setPage] = useState(1)
 	const [drawerUserId, setDrawerUserId] = useState<string | null>(null)
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 	const { data, isLoading, isError } = useUserMatches(page, LIMIT)
 
 	const totalPages = data?.pageTotal ?? 1
@@ -82,7 +83,7 @@ const Matches = () => {
 							{
 								label: "Profile",
 								variant: "outline",
-								onClick: () => setDrawerUserId(match._id),
+								onClick: () => { setDrawerUserId(match._id); setIsDrawerOpen(true) },
 							},
 							{
 								label: "Chat",
@@ -116,14 +117,13 @@ const Matches = () => {
 				</Button>
 			</HStack>
 
-			{drawerUserId && (
-				<DetailDrawer
-					id={drawerUserId}
-					isDrawerOpen={!!drawerUserId}
-					setIsDrawerOpen={(open) => !open && setDrawerUserId(null)}
-					onSwipe={() => {}}
-				/>
-			)}
+			<DetailDrawer
+				id={drawerUserId ?? ""}
+				isDrawerOpen={isDrawerOpen}
+				setIsDrawerOpen={setIsDrawerOpen}
+				onSwipe={() => {}}
+				hideActions
+			/>
 		</Box>
 	)
 }

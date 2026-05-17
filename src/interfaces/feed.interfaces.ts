@@ -45,4 +45,5 @@ export interface DetailDrawerProps {
 	setIsDrawerOpen: (open: boolean) => void
 	isDrawerOpen: boolean
 	onSwipe: (status: "dismissed" | "starred") => void
+	hideActions?: boolean
 }
