@@ -20,8 +20,8 @@ import { FaExpandArrowsAlt } from "react-icons/fa"
 import { IoClose, IoLocationSharp } from "react-icons/io5"
 import PhotoCarousel from "./PhotoCarousel"
 
-const CARD_WIDTH = 340
-const CARD_HEIGHT = 560
+const CARD_WIDTH = 400
+const CARD_HEIGHT = 640
 
 const FeedCard = ({
 	user,
@@ -64,12 +64,10 @@ const FeedCard = ({
 				bg="bg.secondary"
 				border="1px solid"
 				borderColor="border.default">
-				{/* Photo carousel — top 60% */}
 				<Box height="60%">
-					<PhotoCarousel photos={photos} name={user.firstName} height="336px" />
+					<PhotoCarousel photos={photos} name={user.firstName} height="384px" />
 				</Box>
 
-				{/* Info section — bottom 40% */}
 				<VStack
 					align="stretch"
 					gap={2}

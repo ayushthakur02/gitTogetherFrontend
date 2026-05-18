@@ -11,6 +11,7 @@ import {
 	Text,
 } from "@chakra-ui/react"
 import { MessageSquare } from "lucide-react"
+import { FaExpandArrowsAlt } from "react-icons/fa"
 import { useState } from "react"
 
 const LIMIT = 12
@@ -54,8 +55,7 @@ const Matches = () => {
 
 	return (
 		<Box p={8} height="100%" overflowY="auto">
-			{/* Header */}
-			<Box mb={6}>
+<Box mb={6}>
 				<HStack gap={3} align="baseline">
 					<Text fontSize="3xl" fontWeight="bold" color="text.primary">
 						Matched Repos
@@ -70,8 +70,7 @@ const Matches = () => {
 				</Text>
 			</Box>
 
-			{/* Grid */}
-			<Grid
+<Grid
 				templateColumns="repeat(auto-fill, minmax(220px, 1fr))"
 				gap={4}
 				mb={8}>
@@ -83,12 +82,13 @@ const Matches = () => {
 							{
 								label: "Profile",
 								variant: "outline",
+								icon: <FaExpandArrowsAlt size={16} />,
 								onClick: () => { setDrawerUserId(match._id); setIsDrawerOpen(true) },
 							},
 							{
 								label: "Chat",
 								colorPalette: "blue",
-								icon: <MessageSquare size={14} />,
+								icon: <MessageSquare size={16} />,
 								onClick: () => {},
 							},
 						]}
@@ -96,8 +96,7 @@ const Matches = () => {
 				))}
 			</Grid>
 
-			{/* Pagination */}
-			<HStack justify="center" gap={4}>
+<HStack justify="center" gap={4}>
 				<Button
 					variant="outline"
 					size="sm"

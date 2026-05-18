@@ -6,8 +6,7 @@ import { Controller } from "react-hook-form"
 const SignupStepThree = ({ register, errors, control }: SignupStepProps) => {
 	return (
 		<VStack align="stretch" gap={4} width="100%">
-			{/* COUNTRY + STATE */}
-			<HStack width="100%">
+<HStack width="100%">
 				<Field.Root invalid={!!errors.country}>
 					<Field.Label>Country</Field.Label>
 
@@ -31,8 +30,7 @@ const SignupStepThree = ({ register, errors, control }: SignupStepProps) => {
 				</Field.Root>
 			</HStack>
 
-			{/* CITY + PHONE */}
-			<HStack width="100%">
+<HStack width="100%">
 				<Field.Root invalid={!!errors.city}>
 					<Field.Label>City</Field.Label>
 
@@ -60,8 +58,7 @@ const SignupStepThree = ({ register, errors, control }: SignupStepProps) => {
 				</Field.Root>
 			</HStack>
 
-			{/* SKILLS */}
-			<Field.Root invalid={!!errors.skills}>
+<Field.Root invalid={!!errors.skills}>
 				<Field.Label>Skills</Field.Label>
 
 				<Controller

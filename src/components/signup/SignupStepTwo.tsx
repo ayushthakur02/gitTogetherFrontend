@@ -32,8 +32,7 @@ const SignupStepTwo = ({
 
 	return (
 		<VStack align="stretch" gap={4} width="100%">
-			{/* PROFILE PICTURE */}
-			<Field.Root invalid={!!errors.profilePic}>
+<Field.Root invalid={!!errors.profilePic}>
 				<Field.Label>Profile Picture</Field.Label>
 
 				<FileUpload.Root
@@ -63,8 +62,7 @@ const SignupStepTwo = ({
 				</Field.ErrorText>
 			</Field.Root>
 
-			{/* MORE PHOTOS */}
-			<Field.Root invalid={!!multipleImageError}>
+<Field.Root invalid={!!multipleImageError}>
 				<Field.Label>More Photos</Field.Label>
 
 				<FileUpload.Root
@@ -103,8 +101,7 @@ const SignupStepTwo = ({
 				</Field.ErrorText>
 			</Field.Root>
 
-			{/* BIO */}
-			<Field.Root invalid={!!errors.bio}>
+<Field.Root invalid={!!errors.bio}>
 				<Field.Label>Bio</Field.Label>
 
 				<Textarea
@@ -119,8 +116,7 @@ const SignupStepTwo = ({
 				</Field.ErrorText>
 			</Field.Root>
 
-			{/* AGE + GENDER */}
-			<HStack width="100%">
+<HStack width="100%">
 				<Field.Root required invalid={!!errors.age}>
 					<Field.Label>
 						Age

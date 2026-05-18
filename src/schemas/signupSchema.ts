@@ -2,7 +2,6 @@ import { z } from "zod"
 
 export const signupSchema = z
 	.object({
-		// STEP 1
 		firstName: z.string().min(2, "Min 2 characters").max(20, "Max 20 characters"),
 
 		lastName: z.string().min(2, "Min 2 characters").max(20, "Max 20 characters"),
@@ -21,7 +20,6 @@ export const signupSchema = z
 
 		confirmPassword: z.string().min(1, "Please confirm your password"),
 
-		// STEP 2
 		profilePic: z.any().optional(),
 
 		morePhotos: z.array(z.any()).optional(),
@@ -39,7 +37,6 @@ export const signupSchema = z
 			message: "Please select a gender",
 		}),
 
-		// STEP 3
 		country: z.string().min(1, "Country is required"),
 
 		state: z.string().optional(),

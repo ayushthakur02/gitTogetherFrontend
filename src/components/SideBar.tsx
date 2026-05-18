@@ -126,7 +126,6 @@ const SideBar = () => {
 					</List.Root>
 				</Box>
 
-				{/* BOTTOM SECTION */}
 				<Button
 					onClick={() => logoutMutation.mutate()}
 					loading={logoutMutation.isPending}

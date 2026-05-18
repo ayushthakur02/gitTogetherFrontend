@@ -64,7 +64,6 @@ const DetailDrawer = ({
 							</Box>
 
 							<VStack align="stretch" gap={5} px={5} py={5}>
-								{/* Name, age, gender */}
 								{isLoading ? (
 									<SkeletonText noOfLines={2} />
 								) : (
@@ -93,7 +92,6 @@ const DetailDrawer = ({
 									</Box>
 								)}
 
-								{/* Location */}
 								{isLoading ? (
 									<SkeletonText noOfLines={1} />
 								) : (
@@ -111,7 +109,6 @@ const DetailDrawer = ({
 									)
 								)}
 
-								{/* Bio */}
 								{isLoading ? (
 									<SkeletonText noOfLines={3} />
 								) : (
@@ -133,7 +130,6 @@ const DetailDrawer = ({
 									)
 								)}
 
-								{/* Skills */}
 								{isLoading ? (
 									<SkeletonText noOfLines={2} />
 								) : (
@@ -165,7 +161,6 @@ const DetailDrawer = ({
 										</Box>
 									)
 								)}
-
 							</VStack>
 						</Drawer.Body>
 						{!hideActions && (

@@ -7,21 +7,21 @@ const customConfig = defineConfig({
 				bg: {
 					primary: {
 						value: {
-							_light: "#fcf8f9",
+							_light: "#ffffff",
 							_dark: "#131314",
 						},
 					},
 
 					secondary: {
 						value: {
-							_light: "#f6f3f3",
+							_light: "#f6f8fa",
 							_dark: "#1c1b1c",
 						},
 					},
 
 					tertiary: {
 						value: {
-							_light: "#f0eded",
+							_light: "#eaeef2",
 							_dark: "#201f20",
 						},
 					},
@@ -30,21 +30,21 @@ const customConfig = defineConfig({
 				text: {
 					primary: {
 						value: {
-							_light: "#1c1b1c",
+							_light: "#1f2328",
 							_dark: "#e5e2e2",
 						},
 					},
 
 					secondary: {
 						value: {
-							_light: "#44474b",
+							_light: "#636c76",
 							_dark: "#c4c7ca",
 						},
 					},
 
 					disabled: {
 						value: {
-							_light: "#75777b",
+							_light: "#8c959f",
 							_dark: "#8e9194",
 						},
 					},
@@ -53,14 +53,14 @@ const customConfig = defineConfig({
 				border: {
 					default: {
 						value: {
-							_light: "#dcd9d9",
+							_light: "#d0d7de",
 							_dark: "#393939",
 						},
 					},
 
 					light: {
 						value: {
-							_light: "#e5e2e2",
+							_light: "#dde1e6",
 							_dark: "#44474a",
 						},
 					},
@@ -76,14 +76,14 @@ const customConfig = defineConfig({
 
 					100: {
 						value: {
-							_light: "#f6f3f3",
+							_light: "#f6f8fa",
 							_dark: "#1c1b1c",
 						},
 					},
 
 					200: {
 						value: {
-							_light: "#e5e2e2",
+							_light: "#eaeef2",
 							_dark: "#2a2a2a",
 						},
 					},
@@ -97,14 +97,14 @@ const customConfig = defineConfig({
 
 					400: {
 						value: {
-							_light: "#c5c6cb",
+							_light: "#8c959f",
 							_dark: "#44474a",
 						},
 					},
 
 					500: {
 						value: {
-							_light: "#75777b",
+							_light: "#636c76",
 							_dark: "#8e9194",
 						},
 					},
@@ -113,14 +113,14 @@ const customConfig = defineConfig({
 				brand: {
 					primary: {
 						value: {
-							_light: "#10151a",
+							_light: "#1f2328",
 							_dark: "#ffffff",
 						},
 					},
 
 					secondary: {
 						value: {
-							_light: "#0059c1",
+							_light: "#0969da",
 							_dark: "#6eb1ff",
 						},
 					},
@@ -129,7 +129,7 @@ const customConfig = defineConfig({
 				button: {
 					primaryBg: {
 						value: {
-							_light: "#0059c1",
+							_light: "#0969da",
 							_dark: "#6eb1ff",
 						},
 					},
@@ -143,7 +143,7 @@ const customConfig = defineConfig({
 
 					primaryHover: {
 						value: {
-							_light: "#00479a",
+							_light: "#0860ca",
 							_dark: "#90c4ff",
 						},
 					},

@@ -50,7 +50,6 @@ const Login = () => {
 			position="relative"
 			overflow="hidden"
 			p={6}>
-			{/* BACKGROUND DOTS */}
 			<Box
 				position="absolute"
 				inset={0}
@@ -61,7 +60,6 @@ const Login = () => {
 				opacity={0.12}
 			/>
 
-			{/* MAIN CARD */}
 			<Flex
 				position="relative"
 				zIndex={1}
@@ -75,7 +73,6 @@ const Login = () => {
 				bg="bg.secondary"
 				backdropFilter="blur(14px)"
 				overflow="hidden">
-				{/* LEFT PANEL */}
 				<Flex
 					flex={1}
 					direction="column"
@@ -85,7 +82,6 @@ const Login = () => {
 					borderRight="1px solid"
 					borderColor="border.default">
 					<VStack align="start" gap={8}>
-						{/* LOGO */}
 						<HStack gap={3}>
 							<Icon as={FaCode} color="brand.secondary" />
 
@@ -94,7 +90,6 @@ const Login = () => {
 							</Heading>
 						</HStack>
 
-						{/* FEATURES */}
 						<VStack align="start" gap={6}>
 							<Heading color="text.primary" size="5xl">
 								Build your developer network.
@@ -113,7 +108,6 @@ const Login = () => {
 						</VStack>
 					</VStack>
 
-					{/* TERMINAL BOX */}
 					<Box
 						maxW="420px"
 						bg="neutral.50"
@@ -133,10 +127,8 @@ const Login = () => {
 					</Box>
 				</Flex>
 
-				{/* RIGHT PANEL */}
 				<Flex flex={1} direction="column" p={12}>
 					<VStack align="stretch" gap={7} maxW="420px" width="100%" mx="auto">
-						{/* HEADER */}
 						<Box>
 							<Text color="text.secondary">Welcome back, dev.</Text>
 
@@ -145,7 +137,6 @@ const Login = () => {
 							</Heading>
 						</Box>
 
-						{/* GITHUB BUTTON */}
 						<Button
 							size="lg"
 							bg="button.githubBg"
@@ -159,7 +150,6 @@ const Login = () => {
 							Continue with GitHub
 						</Button>
 
-						{/* SEPARATOR */}
 						<HStack width="100%">
 							<Separator flex={1} borderColor="border.default" />
 
@@ -170,9 +160,7 @@ const Login = () => {
 							<Separator flex={1} borderColor="border.default" />
 						</HStack>
 
-						{/* FORM */}
 						<VStack align="stretch" gap={4}>
-							{/* EMAIL / USERNAME */}
 							<Field.Root invalid={!!errors.userId}>
 								<Text mb={2} color="text.secondary" fontSize="sm">
 									Username or Email address
@@ -196,7 +184,6 @@ const Login = () => {
 								</Field.ErrorText>
 							</Field.Root>
 
-							{/* PASSWORD */}
 							<Field.Root invalid={!!errors.password}>
 								<Flex justify="space-between" mb={2}>
 									<Text color="text.secondary" fontSize="sm">
@@ -228,7 +215,6 @@ const Login = () => {
 							</Field.Root>
 						</VStack>
 
-						{/* SIGN IN */}
 						<Button
 							size="lg"
 							bg="button.primaryBg"
@@ -244,7 +230,6 @@ const Login = () => {
 
 						<Separator borderColor="border.default" />
 
-						{/* FOOTER */}
 						<VStack gap={3}>
 							<Text color="text.secondary">New to gitTogether?</Text>
 							<Link to="/signup">

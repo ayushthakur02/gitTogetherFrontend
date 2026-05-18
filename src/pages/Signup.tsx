@@ -187,8 +187,7 @@ const Signup = () => {
 			position="relative"
 			overflow="hidden"
 			p={6}>
-			{/* BACKGROUND DOTS */}
-			<Box
+<Box
 				position="absolute"
 				inset={0}
 				backgroundImage="
@@ -198,8 +197,7 @@ const Signup = () => {
 				opacity={0.12}
 			/>
 
-			{/* MAIN CARD */}
-			<Flex
+<Flex
 				position="relative"
 				zIndex={1}
 				width="100%"
@@ -212,8 +210,7 @@ const Signup = () => {
 				bg="bg.secondary"
 				backdropFilter="blur(14px)"
 				overflow="hidden">
-				{/* LEFT PANEL */}
-				<Flex
+<Flex
 					width="340px"
 					direction="column"
 					justify="space-between"
@@ -246,8 +243,7 @@ const Signup = () => {
 					</VStack>
 				</Flex>
 
-				{/* RIGHT PANEL */}
-				<Flex
+<Flex
 					flex={1}
 					direction="column"
 					justify="start"
@@ -255,8 +251,7 @@ const Signup = () => {
 					paddingLeft={0}
 					overflowY="auto">
 					<VStack align="stretch" gap={7} maxW="650px" width="100%" mx="auto">
-						{/* HEADER */}
-						<Box>
+<Box>
 							<Heading size="2xl" color="text.primary" lineHeight="1.4">
 								Create Account
 							</Heading>
@@ -266,8 +261,7 @@ const Signup = () => {
 							</Text>
 						</Box>
 
-						{/* STEPS */}
-						<Steps.Root step={step} count={3} colorPalette="blue">
+<Steps.Root step={step} count={3} colorPalette="blue">
 							<VStack align="stretch" gap={6}>
 								<Steps.List>
 									{steps.map((item, index) => (
@@ -288,11 +282,9 @@ const Signup = () => {
 									))}
 								</Steps.List>
 
-								{/* STEP CONTENT */}
-								<Box>{steps[step].component}</Box>
+<Box>{steps[step].component}</Box>
 
-								{/* NAVIGATION */}
-								<HStack justify="space-between">
+<HStack justify="space-between">
 									<Button
 										variant="outline"
 										borderColor="border.default"
@@ -315,8 +307,7 @@ const Signup = () => {
 
 								<Separator borderColor="border.default" />
 
-								{/* FOOTER */}
-								<VStack gap={3}>
+<VStack gap={3}>
 									<Text color="text.secondary">Already have an account?</Text>
 									<Link to={"/login"}>
 										<Button

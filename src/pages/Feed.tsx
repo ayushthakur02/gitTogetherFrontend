@@ -45,7 +45,6 @@ const Feed = () => {
 		}
 	}
 
-	// Nudge card when keyboard arms a direction so overlays become visible
 	useEffect(() => {
 		if (pendingDirection === "left")
 			animate(x, -40, { type: "spring", stiffness: 300, damping: 25 })
@@ -54,7 +53,6 @@ const Feed = () => {
 		else animate(x, 0, { type: "spring", stiffness: 500, damping: 30 })
 	}, [pendingDirection, x])
 
-	// Keyboard: first press arms, second press fires
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "ArrowLeft") {
@@ -83,7 +81,6 @@ const Feed = () => {
 	const isRefetching = useRef(false)
 	const feedLength = data?.data.length ?? 0
 
-	// When cards are exhausted, refetch and reset index
 	useEffect(() => {
 		if (feedLength > 0 && currentIndex >= feedLength && !isRefetching.current) {
 			isRefetching.current = true
@@ -147,7 +144,6 @@ const Feed = () => {
 	return (
 		<Flex justifyContent="center" alignItems="center" height="100%">
 			<div style={{ position: "relative", width: "fit-content" }}>
-				{/* Reject overlay — floats outside left edge */}
 				<motion.div
 					style={{
 						opacity: rejectOpacity,
@@ -168,8 +164,7 @@ const Feed = () => {
 					</Box>
 				</motion.div>
 
-				{/* Connect overlay — floats outside right edge */}
-				<motion.div
+			<motion.div
 					style={{
 						opacity: connectOpacity,
 						position: "absolute",
@@ -189,8 +184,7 @@ const Feed = () => {
 					</Box>
 				</motion.div>
 
-				{/* Next card peeking behind */}
-				{nextUser && (
+			{nextUser && (
 					<motion.div
 						style={{
 							scale: nextCardScale,
@@ -210,8 +204,7 @@ const Feed = () => {
 					</motion.div>
 				)}
 
-				{/* Current card */}
-				<FeedCard
+			<FeedCard
 					key={currentUser._id}
 					user={currentUser}
 					onSwipe={triggerSwipe}

@@ -15,12 +15,10 @@ const ProfileCard = ({ user, actions }: ProfileCardProps) => {
 			border="1px solid"
 			borderColor="border.default"
 			borderRadius="xl"
-			overflow="hidden"
 			display="flex"
 			flexDirection="column"
 			gap={3}
 			p={4}>
-			{/* Profile image */}
 			<Box
 				border="2px solid"
 				borderColor="brand.secondary"
@@ -37,7 +35,6 @@ const ProfileCard = ({ user, actions }: ProfileCardProps) => {
 				/>
 			</Box>
 
-			{/* Info */}
 			<VStack align="start" gap={1} flex={1}>
 				<Text fontWeight="semibold" fontSize="md" color="text.primary" lineClamp={1}>
 					{user.firstName} {user.lastName}
@@ -55,7 +52,6 @@ const ProfileCard = ({ user, actions }: ProfileCardProps) => {
 				)}
 			</VStack>
 
-			{/* Skills */}
 			{user.skills && user.skills.length > 0 && (
 				<HStack flexWrap="wrap" gap={1}>
 					{user.skills.slice(0, 3).map((skill) => (
@@ -71,18 +67,21 @@ const ProfileCard = ({ user, actions }: ProfileCardProps) => {
 				</HStack>
 			)}
 
-			{/* Action buttons */}
-			<HStack gap={2}>
+			<HStack justify="center" gap={6} pt={1}>
 				{actions.map((action) => (
 					<Button
 						key={action.label}
-						flex={1}
-						size="sm"
 						variant={action.variant ?? "outline"}
 						colorPalette={action.colorPalette}
+						borderRadius="full"
+						size="lg"
+						w="48px"
+						h="48px"
+						p={0}
+						minW="unset"
+						aria-label={action.label}
 						onClick={action.onClick}>
 						{action.icon}
-						{action.label}
 					</Button>
 				))}
 			</HStack>

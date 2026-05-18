@@ -405,8 +405,7 @@ const Profile = () => {
 						</Field.Root>
 					</HStack>
 
-					{/* DISABLED — Gender */}
-					<Field.Root>
+<Field.Root>
 						<Field.Label>Gender</Field.Label>
 						<Input
 							value={user?.gender ?? ""}
@@ -419,8 +418,7 @@ const Profile = () => {
 						/>
 					</Field.Root>
 
-					{/* EDITABLE — Age */}
-					<Field.Root invalid={!!errors.age}>
+<Field.Root invalid={!!errors.age}>
 						<Field.Label>Age</Field.Label>
 						<Input
 							type="number"
@@ -439,8 +437,7 @@ const Profile = () => {
 						</Field.ErrorText>
 					</Field.Root>
 
-					{/* DISABLED — Country & State */}
-					<HStack width="100%">
+<HStack width="100%">
 						<Field.Root>
 							<Field.Label>Country</Field.Label>
 							<Input
@@ -465,8 +462,7 @@ const Profile = () => {
 						</Field.Root>
 					</HStack>
 
-					{/* DISABLED — City & Phone */}
-					<HStack width="100%">
+<HStack width="100%">
 						<Field.Root>
 							<Field.Label>City</Field.Label>
 							<Input
@@ -491,8 +487,7 @@ const Profile = () => {
 						</Field.Root>
 					</HStack>
 
-					{/* EDITABLE — Bio */}
-					<Field.Root invalid={!!errors.bio}>
+<Field.Root invalid={!!errors.bio}>
 						<Field.Label>Bio</Field.Label>
 						<Textarea
 							bg="bg.tertiary"
@@ -511,8 +506,7 @@ const Profile = () => {
 						</Field.ErrorText>
 					</Field.Root>
 
-					{/* EDITABLE — Skills */}
-					<Field.Root invalid={!!errors.skills}>
+<Field.Root invalid={!!errors.skills}>
 						<Field.Label>Skills</Field.Label>
 						<Controller
 							control={control}
@@ -535,8 +529,7 @@ const Profile = () => {
 						</Field.ErrorText>
 					</Field.Root>
 
-					{/* SAVE PROFILE */}
-					<Button
+<Button
 						alignSelf="flex-end"
 						bg="button.primaryBg"
 						color="button.primaryText"
@@ -576,8 +569,7 @@ const Profile = () => {
 
 					{isPasswordEnabled && (
 						<VStack align="stretch" gap={5}>
-							{/* OLD PASSWORD */}
-							<Field.Root invalid={!!pwErrors.oldPassword}>
+<Field.Root invalid={!!pwErrors.oldPassword}>
 								<Field.Label>Old Password</Field.Label>
 								<Input
 									type="password"
@@ -596,8 +588,7 @@ const Profile = () => {
 								</Field.ErrorText>
 							</Field.Root>
 
-							{/* NEW PASSWORD */}
-							<Field.Root invalid={!!pwErrors.newPassword}>
+<Field.Root invalid={!!pwErrors.newPassword}>
 								<Field.Label>New Password</Field.Label>
 								<Input
 									type="password"
@@ -640,8 +631,7 @@ const Profile = () => {
 								</Box>
 							</Field.Root>
 
-							{/* CONFIRM NEW PASSWORD */}
-							<Field.Root invalid={!!pwErrors.confirmNewPassword}>
+<Field.Root invalid={!!pwErrors.confirmNewPassword}>
 								<Field.Label>Confirm New Password</Field.Label>
 								<Input
 									type="password"
@@ -660,8 +650,7 @@ const Profile = () => {
 								</Field.ErrorText>
 							</Field.Root>
 
-							{/* SAVE PASSWORD */}
-							<Button
+<Button
 								alignSelf="flex-end"
 								bg="button.primaryBg"
 								color="button.primaryText"
@@ -677,7 +666,6 @@ const Profile = () => {
 
 				<Separator borderColor="border.default" />
 
-				{/* ── DANGER ZONE ── */}
 				<Box
 					border="1px solid"
 					borderColor="status.error"
@@ -706,7 +694,6 @@ const Profile = () => {
 				</Box>
 			</VStack>
 
-			{/* ── DELETE CONFIRMATION DIALOG ── */}
 			<Dialog.Root
 				role="alertdialog"
 				open={isDeleteDialogOpen}

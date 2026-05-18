@@ -11,7 +11,9 @@ import {
 	Spinner,
 	Text,
 } from "@chakra-ui/react"
-import { Check, X } from "lucide-react"
+import { FaExpandArrowsAlt } from "react-icons/fa"
+import { FaCodePullRequest } from "react-icons/fa6"
+import { IoClose } from "react-icons/io5"
 import { useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -80,8 +82,7 @@ const Requests = () => {
 
 	return (
 		<Box p={8} height="100%" overflowY="auto">
-			{/* Header */}
-			<Box mb={6}>
+<Box mb={6}>
 				<HStack gap={3} align="baseline">
 					<Text fontSize="3xl" fontWeight="bold" color="text.primary">
 						Pending Requests
@@ -95,8 +96,7 @@ const Requests = () => {
 				</Text>
 			</Box>
 
-			{/* Grid */}
-			<Grid
+<Grid
 				templateColumns="repeat(auto-fill, minmax(220px, 1fr))"
 				gap={4}
 				mb={8}>
@@ -106,21 +106,22 @@ const Requests = () => {
 						user={request}
 						actions={[
 							{
-								label: "Profile",
-								variant: "outline",
-								onClick: () => { setDrawerUserId(request.initiatorID); setIsDrawerOpen(true) },
-							},
-							{
 								label: "Decline",
 								variant: "outline",
 								colorPalette: "red",
-								icon: <X size={14} />,
+								icon: <IoClose size={20} />,
 								onClick: () => handleAction("dismissed", request.initiatorID),
+							},
+							{
+								label: "Profile",
+								variant: "outline",
+								icon: <FaExpandArrowsAlt size={16} />,
+								onClick: () => { setDrawerUserId(request.initiatorID); setIsDrawerOpen(true) },
 							},
 							{
 								label: "Accept",
 								colorPalette: "green",
-								icon: <Check size={14} />,
+								icon: <FaCodePullRequest size={16} />,
 								onClick: () => handleAction("starred", request.initiatorID),
 							},
 						]}
@@ -128,8 +129,7 @@ const Requests = () => {
 				))}
 			</Grid>
 
-			{/* Pagination */}
-			<HStack justify="center" gap={4}>
+<HStack justify="center" gap={4}>
 				<Button
 					variant="outline"
 					size="sm"
