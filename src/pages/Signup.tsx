@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { signupSchema, type SignupFormData } from "@/schemas/signupSchema"
 
 import {
+	Badge,
 	Box,
 	Button,
 	Flex,
@@ -218,19 +219,32 @@ const Signup = () => {
 								gitTogether
 							</Heading>
 						</HStack>
-						<Button
-							alignSelf={"center"}
-							size="lg"
-							bg="button.githubBg"
-							color="button.githubText"
-							border="1px solid"
-							borderColor="border.default"
-							_hover={{
-								bg: "bg.tertiary",
-							}}>
-							<FaGithub />
-							Continue with GitHub
-						</Button>
+						<Box position="relative" display="inline-flex" alignSelf="center">
+							<Button
+								size="lg"
+								bg="button.githubBg"
+								color="button.githubText"
+								border="1px solid"
+								borderColor="border.default"
+								_hover={{
+									bg: "bg.tertiary",
+								}}
+								disabled>
+								<FaGithub />
+								Continue with GitHub
+							</Button>
+							<Badge
+								position="absolute"
+								top="-2"
+								right="-2"
+								colorPalette="orange"
+								variant="solid"
+								fontSize="2xs"
+								borderRadius="full"
+								px={2}>
+								Soon
+							</Badge>
+						</Box>
 					</VStack>
 				</Flex>
 

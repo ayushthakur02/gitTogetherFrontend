@@ -2,6 +2,7 @@ import toaster from "@/components/ui/toaster"
 import { useLogin } from "@/hooks/useAuth"
 import { loginSchema, type LoginFormData } from "@/schemas/loginSchema"
 import {
+	Badge,
 	Box,
 	Button,
 	Field,
@@ -137,18 +138,33 @@ const Login = () => {
 							</Heading>
 						</Box>
 
-						<Button
-							size="lg"
-							bg="button.githubBg"
-							color="button.githubText"
-							border="1px solid"
-							borderColor="border.default"
-							_hover={{
-								bg: "bg.tertiary",
-							}}>
-							<FaGithub />
-							Continue with GitHub
-						</Button>
+						<Box position="relative" display="inline-flex" alignSelf="stretch">
+							<Button
+								width="100%"
+								size="lg"
+								bg="button.githubBg"
+								color="button.githubText"
+								border="1px solid"
+								borderColor="border.default"
+								_hover={{
+									bg: "bg.tertiary",
+								}}
+								disabled>
+								<FaGithub />
+								Continue with GitHub
+							</Button>
+							<Badge
+								position="absolute"
+								top="-2"
+								right="-2"
+								colorPalette="orange"
+								variant="solid"
+								fontSize="2xs"
+								borderRadius="full"
+								px={2}>
+								Soon
+							</Badge>
+						</Box>
 
 						<HStack width="100%">
 							<Separator flex={1} borderColor="border.default" />
