@@ -31,6 +31,7 @@ export interface FeedCardProps {
 	onSwipe: (status: "dismissed" | "starred") => void
 	motionX?: MotionValue<number>
 	setIsDrawerOpen: (open: boolean) => void
+	preview?: boolean
 }
 
 export interface PhotoCarouselProps {

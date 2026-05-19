@@ -1,5 +1,6 @@
 import type { ProfileCardAction, ProfileCardUser } from "@/interfaces/feed.interfaces"
-import { Badge, Box, Button, HStack, Image, Text, VStack } from "@chakra-ui/react"
+import { Badge, Box, Button, HStack, Icon, Image, Text, VStack } from "@chakra-ui/react"
+import { IoPerson } from "react-icons/io5"
 
 interface ProfileCardProps {
 	user: ProfileCardUser
@@ -26,13 +27,25 @@ const ProfileCard = ({ user, actions }: ProfileCardProps) => {
 				overflow="hidden"
 				width="100%"
 				aspectRatio="1">
-				<Image
-					src={user.profilePic ?? "https://placehold.co/200x200?text=?"}
-					alt={user.firstName}
-					width="100%"
-					height="100%"
-					objectFit="cover"
-				/>
+				{user.profilePic ? (
+					<Image
+						src={user.profilePic}
+						alt={user.firstName}
+						width="100%"
+						height="100%"
+						objectFit="cover"
+					/>
+				) : (
+					<Box
+						width="100%"
+						height="100%"
+						display="flex"
+						alignItems="center"
+						justifyContent="center"
+						bg="bg.tertiary">
+						<Icon as={IoPerson} boxSize={16} color="text.disabled" />
+					</Box>
+				)}
 			</Box>
 
 			<VStack align="start" gap={1} flex={1}>

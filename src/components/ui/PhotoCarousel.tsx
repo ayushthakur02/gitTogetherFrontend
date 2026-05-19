@@ -1,7 +1,21 @@
 import type { PhotoCarouselProps } from "@/interfaces/feed.interfaces"
-import { Box, Carousel, HStack, Image } from "@chakra-ui/react"
+import { Box, Carousel, HStack, Icon, Image } from "@chakra-ui/react"
+import { IoPerson } from "react-icons/io5"
 
 const PhotoCarousel = ({ photos, name, height, objectFit = "cover" }: PhotoCarouselProps) => {
+	if (photos.length === 0) {
+		return (
+			<Box
+				height={height}
+				display="flex"
+				alignItems="center"
+				justifyContent="center"
+				bg="bg.tertiary">
+				<Icon as={IoPerson} boxSize={20} color="text.disabled" />
+			</Box>
+		)
+	}
+
 	return (
 		<Box height={height} position="relative">
 			<Carousel.Root

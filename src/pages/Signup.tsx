@@ -27,6 +27,7 @@ import { FaCode, FaGithub } from "react-icons/fa"
 import toaster from "@/components/ui/toaster"
 import { Link, useNavigate } from "@tanstack/react-router"
 import { useSignup } from "@/hooks/useAuth"
+import { uploadToCloudinaryAsGuest } from "@/api/upload"
 
 const Signup = () => {
 	const {
@@ -58,24 +59,14 @@ const Signup = () => {
 	const [step, setStep] = useState(0)
 
 	const onSubmit = async (data: SignupFormData) => {
-		const fileToBase64 = (file: File): Promise<string> =>
-			new Promise((resolve, reject) => {
-				const reader = new FileReader()
-				reader.readAsDataURL(file)
-				reader.onload = () => resolve(reader.result as string)
-				reader.onerror = reject
-			})
-
 		let profilePic: string | undefined
 		if (data.profilePic instanceof File) {
-			profilePic = await fileToBase64(data.profilePic)
+			profilePic = (await uploadToCloudinaryAsGuest(data.profilePic)) as string
 		}
 
 		let morePhotos: string[] | undefined
 		if (Array.isArray(data.morePhotos) && data.morePhotos.length > 0) {
-			morePhotos = await Promise.all(
-				(data.morePhotos as File[]).map(fileToBase64),
-			)
+			morePhotos = (await uploadToCloudinaryAsGuest(data.morePhotos as File[])) as string[]
 		}
 
 		signupMutation.mutate(

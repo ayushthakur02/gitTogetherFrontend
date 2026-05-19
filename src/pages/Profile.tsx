@@ -1,4 +1,3 @@
-import FileUploadList from "@/components/FileUploadList"
 import toaster from "@/components/ui/toaster"
 import { useCurrentUser } from "@/hooks/useAuth"
 import {
@@ -39,14 +38,8 @@ import { useEffect, useRef, useState } from "react"
 import { Controller, useForm, useWatch } from "react-hook-form"
 import { IoCheckmark, IoClose } from "react-icons/io5"
 import { LuFileImage } from "react-icons/lu"
-
-const fileToBase64 = (file: File): Promise<string> =>
-	new Promise((resolve, reject) => {
-		const reader = new FileReader()
-		reader.readAsDataURL(file)
-		reader.onload = () => resolve(reader.result as string)
-		reader.onerror = reject
-	})
+import { uploadToCloudinary } from "@/api/upload"
+import FeedCard from "@/components/ui/FeedCard"
 
 const PasswordRule = ({
 	passed,
@@ -80,6 +73,7 @@ const Profile = () => {
 	const [newProfilePicFile, setNewProfilePicFile] = useState<File | null>(null)
 	const [existingMorePhotos, setExistingMorePhotos] = useState<string[]>([])
 	const [newMorePhotoFiles, setNewMorePhotoFiles] = useState<File[]>([])
+	const [newMorePhotoUrls, setNewMorePhotoUrls] = useState<string[]>([])
 
 	const [isPasswordEnabled, setIsPasswordEnabled] = useState(false)
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -109,6 +103,10 @@ const Profile = () => {
 		name: "newPassword",
 		defaultValue: "",
 	})
+
+	const watchedAge = useWatch({ control, name: "age" })
+	const watchedBio = useWatch({ control, name: "bio" })
+	const watchedSkills = useWatch({ control, name: "skills" })
 
 	const initialized = useRef(false)
 	useEffect(() => {
@@ -145,7 +143,9 @@ const Profile = () => {
 			existingProfilePic !== (user?.profilePic || null)
 		if (profilePicChanged) {
 			if (newProfilePicFile) {
-				payload.profilePic = await fileToBase64(newProfilePicFile)
+				payload.profilePic = (await uploadToCloudinary(
+					newProfilePicFile,
+				)) as string
 			} else {
 				payload.profilePic = existingProfilePic ?? undefined
 			}
@@ -157,10 +157,11 @@ const Profile = () => {
 			existingMorePhotos.length !== originalMorePhotos.length ||
 			existingMorePhotos.some((p, i) => p !== originalMorePhotos[i])
 		if (morePhotosChanged) {
-			const newPhotosBase64 = await Promise.all(
-				newMorePhotoFiles.map(fileToBase64),
-			)
-			payload.morePhotos = [...existingMorePhotos, ...newPhotosBase64]
+			const newUrls =
+				newMorePhotoFiles.length > 0
+					? ((await uploadToCloudinary(newMorePhotoFiles)) as string[])
+					: []
+			payload.morePhotos = [...existingMorePhotos, ...newUrls]
 		}
 
 		if (Object.keys(payload).length === 0) {
@@ -243,303 +244,398 @@ const Profile = () => {
 
 				<Separator borderColor="border.default" />
 
-				<VStack align="stretch" gap={5}>
-					<Text fontSize="lg" fontWeight="semibold" color="text.primary">
-						Profile Information
-					</Text>
+				<HStack align="start" gap={10}>
+					<VStack align="stretch" gap={5} flex={1}>
+						<Text fontSize="lg" fontWeight="semibold" color="text.primary">
+							Profile Information
+						</Text>
 
-					<Field.Root>
-						<Field.Label>Profile Picture</Field.Label>
-						<VStack align="start" gap={3}>
-							{existingProfilePic && !newProfilePicFile && (
-								<Box position="relative" display="inline-block">
-									<Image
-										src={existingProfilePic}
-										alt="Profile picture"
-										boxSize="20"
-										borderRadius="lg"
-										objectFit="cover"
-										border="2px solid"
-										borderColor="border.default"
-									/>
-									<Float placement="top-end">
-										<CloseButton
-											boxSize="5"
-											layerStyle="fill.solid"
-											borderRadius="full"
-											size="xs"
-											onClick={() => setExistingProfilePic(null)}
+						<Field.Root>
+							<Field.Label>Profile Picture</Field.Label>
+							<VStack align="start" gap={3}>
+								{newProfilePicFile ? (
+									<Box position="relative" display="inline-block">
+										<Image
+											src={URL.createObjectURL(newProfilePicFile)}
+											alt="New profile picture"
+											boxSize="20"
+											borderRadius="lg"
+											objectFit="cover"
+											border="2px solid"
+											borderColor="brand.secondary"
 										/>
-									</Float>
-								</Box>
-							)}
-							<FileUpload.Root
-								accept="image/*"
-								maxFiles={1}
-								onFileAccept={(details) =>
-									setNewProfilePicFile(details.files[0])
-								}>
-								<FileUpload.HiddenInput />
-								<FileUpload.Trigger asChild>
-									<Button variant="outline" size="sm">
-										<LuFileImage />
-										{existingProfilePic || newProfilePicFile
-											? "Change profile picture"
-											: "Upload profile picture"}
-									</Button>
-								</FileUpload.Trigger>
-								<FileUploadList />
-							</FileUpload.Root>
-						</VStack>
-					</Field.Root>
-
-					<Field.Root>
-						<Field.Label>
-							More Photos{" "}
-							<Text as="span" fontSize="xs" color="text.secondary">
-								({totalMorePhotos}/5)
-							</Text>
-						</Field.Label>
-						<VStack align="start" gap={3}>
-							{existingMorePhotos.length > 0 && (
-								<HStack gap={3} flexWrap="wrap">
-									{existingMorePhotos.map((url, i) => (
-										<Box key={i} position="relative">
-											<Image
-												src={url}
-												alt={`Photo ${i + 1}`}
-												boxSize="20"
-												borderRadius="lg"
-												objectFit="cover"
-												border="1px solid"
-												borderColor="border.default"
+										<Float placement="top-end">
+											<CloseButton
+												boxSize="5"
+												layerStyle="fill.solid"
+												borderRadius="full"
+												size="xs"
+												onClick={(e) => {
+													e.stopPropagation()
+													setNewProfilePicFile(null)
+												}}
 											/>
-											<Float placement="top-end">
-												<CloseButton
-													boxSize="5"
-													layerStyle="fill.solid"
-													borderRadius="full"
-													size="xs"
-													onClick={() =>
-														setExistingMorePhotos((prev) =>
-															prev.filter((_, idx) => idx !== i),
-														)
-													}
-												/>
-											</Float>
-										</Box>
-									))}
-								</HStack>
-							)}
-							{totalMorePhotos < 5 ? (
+										</Float>
+									</Box>
+								) : existingProfilePic ? (
+									<Box position="relative" display="inline-block">
+										<Image
+											src={existingProfilePic}
+											alt="Profile picture"
+											boxSize="20"
+											borderRadius="lg"
+											objectFit="cover"
+											border="2px solid"
+											borderColor="border.default"
+										/>
+										<Float placement="top-end">
+											<CloseButton
+												boxSize="5"
+												layerStyle="fill.solid"
+												borderRadius="full"
+												size="xs"
+												onClick={(e) => {
+													e.stopPropagation()
+													setExistingProfilePic(null)
+												}}
+											/>
+										</Float>
+									</Box>
+								) : null}
 								<FileUpload.Root
 									accept="image/*"
-									maxFiles={5 - existingMorePhotos.length}
+									maxFiles={1}
 									onFileAccept={(details) =>
-										setNewMorePhotoFiles(details.files)
+										setNewProfilePicFile(details.files[0])
 									}>
 									<FileUpload.HiddenInput />
 									<FileUpload.Trigger asChild>
 										<Button variant="outline" size="sm">
 											<LuFileImage />
-											Add more photos
+											{existingProfilePic || newProfilePicFile
+												? "Change profile picture"
+												: "Upload profile picture"}
 										</Button>
 									</FileUpload.Trigger>
-									<FileUploadList />
 								</FileUpload.Root>
-							) : (
-								<Text fontSize="xs" color="text.secondary">
-									Maximum of 5 photos reached.
+							</VStack>
+						</Field.Root>
+
+						<Field.Root>
+							<Field.Label>
+								More Photos{" "}
+								<Text as="span" fontSize="xs" color="text.secondary">
+									({totalMorePhotos}/5)
 								</Text>
-							)}
-						</VStack>
-					</Field.Root>
+							</Field.Label>
+							<VStack align="start" gap={3}>
+								{(existingMorePhotos.length > 0 ||
+									newMorePhotoUrls.length > 0) && (
+									<HStack gap={3} flexWrap="wrap">
+										{existingMorePhotos.map((url, i) => (
+											<Box key={`existing-${i}`} position="relative">
+												<Image
+													src={url}
+													alt={`Photo ${i + 1}`}
+													boxSize="20"
+													borderRadius="lg"
+													objectFit="cover"
+													border="1px solid"
+													borderColor="border.default"
+												/>
+												<Float placement="top-end">
+													<CloseButton
+														boxSize="5"
+														layerStyle="fill.solid"
+														borderRadius="full"
+														size="xs"
+														onClick={(e) => {
+															e.stopPropagation()
+															setExistingMorePhotos((prev) =>
+																prev.filter((_, idx) => idx !== i),
+															)
+														}}
+													/>
+												</Float>
+											</Box>
+										))}
+										{newMorePhotoUrls.map((url, i) => (
+											<Box key={`new-${i}`} position="relative">
+												<Image
+													src={url}
+													alt={`New photo ${i + 1}`}
+													boxSize="20"
+													borderRadius="lg"
+													objectFit="cover"
+													border="2px solid"
+													borderColor="brand.secondary"
+												/>
+												<Float placement="top-end">
+													<CloseButton
+														boxSize="5"
+														layerStyle="fill.solid"
+														borderRadius="full"
+														size="xs"
+														onClick={(e) => {
+															e.stopPropagation()
+															URL.revokeObjectURL(url)
+															setNewMorePhotoUrls((prev) =>
+																prev.filter((_, idx) => idx !== i),
+															)
+															setNewMorePhotoFiles((prev) =>
+																prev.filter((_, idx) => idx !== i),
+															)
+														}}
+													/>
+												</Float>
+											</Box>
+										))}
+									</HStack>
+								)}
+								{totalMorePhotos < 5 ? (
+									<FileUpload.Root
+										accept="image/*"
+										maxFiles={5 - existingMorePhotos.length}
+										onFileAccept={(details) => {
+											setNewMorePhotoFiles(details.files)
+											setNewMorePhotoUrls(
+												details.files.map((f) => URL.createObjectURL(f)),
+											)
+										}}>
+										<FileUpload.HiddenInput />
+										<FileUpload.Trigger asChild>
+											<Button variant="outline" size="sm">
+												<LuFileImage />
+												Add more photos
+											</Button>
+										</FileUpload.Trigger>
+									</FileUpload.Root>
+								) : (
+									<Text fontSize="xs" color="text.secondary">
+										Maximum of 5 photos reached.
+									</Text>
+								)}
+							</VStack>
+						</Field.Root>
 
-					<HStack width="100%">
+						<HStack width="100%">
+							<Field.Root>
+								<Field.Label>First Name</Field.Label>
+								<Input
+									value={user?.firstName ?? ""}
+									readOnly
+									disabled
+									bg="bg.tertiary"
+									borderColor="border.default"
+									color="text.disabled"
+								/>
+							</Field.Root>
+							<Field.Root>
+								<Field.Label>Last Name</Field.Label>
+								<Input
+									value={user?.lastName ?? ""}
+									readOnly
+									disabled
+									bg="bg.tertiary"
+									borderColor="border.default"
+									color="text.disabled"
+								/>
+							</Field.Root>
+						</HStack>
+
+						<HStack width="100%">
+							<Field.Root>
+								<Field.Label>Email</Field.Label>
+								<Input
+									value={user?.emailId ?? ""}
+									readOnly
+									disabled
+									bg="bg.tertiary"
+									borderColor="border.default"
+									color="text.disabled"
+								/>
+							</Field.Root>
+							<Field.Root>
+								<Field.Label>Username</Field.Label>
+								<Input
+									value={user?.userName ? `@${user.userName}` : ""}
+									readOnly
+									disabled
+									bg="bg.tertiary"
+									borderColor="border.default"
+									color="text.disabled"
+								/>
+							</Field.Root>
+						</HStack>
+
 						<Field.Root>
-							<Field.Label>First Name</Field.Label>
+							<Field.Label>Gender</Field.Label>
 							<Input
-								value={user?.firstName ?? ""}
+								value={user?.gender ?? ""}
 								readOnly
 								disabled
 								bg="bg.tertiary"
 								borderColor="border.default"
 								color="text.disabled"
+								textTransform="capitalize"
 							/>
 						</Field.Root>
-						<Field.Root>
-							<Field.Label>Last Name</Field.Label>
+
+						<Field.Root invalid={!!errors.age}>
+							<Field.Label>Age</Field.Label>
 							<Input
-								value={user?.lastName ?? ""}
-								readOnly
-								disabled
+								type="number"
 								bg="bg.tertiary"
 								borderColor="border.default"
-								color="text.disabled"
+								color="text.primary"
+								_focusVisible={{
+									borderColor: "brand.secondary",
+									boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
+								}}
+								{...register("age", { valueAsNumber: true })}
 							/>
+							<Field.ErrorText>
+								<Field.ErrorIcon />
+								{errors.age?.message}
+							</Field.ErrorText>
 						</Field.Root>
-					</HStack>
 
-					<HStack width="100%">
-						<Field.Root>
-							<Field.Label>Email</Field.Label>
-							<Input
-								value={user?.emailId ?? ""}
-								readOnly
-								disabled
+						<HStack width="100%">
+							<Field.Root>
+								<Field.Label>Country</Field.Label>
+								<Input
+									value={user?.country ?? ""}
+									readOnly
+									disabled
+									bg="bg.tertiary"
+									borderColor="border.default"
+									color="text.disabled"
+								/>
+							</Field.Root>
+							<Field.Root>
+								<Field.Label>State</Field.Label>
+								<Input
+									value={user?.state ?? ""}
+									readOnly
+									disabled
+									bg="bg.tertiary"
+									borderColor="border.default"
+									color="text.disabled"
+								/>
+							</Field.Root>
+						</HStack>
+
+						<HStack width="100%">
+							<Field.Root>
+								<Field.Label>City</Field.Label>
+								<Input
+									value={user?.city ?? ""}
+									readOnly
+									disabled
+									bg="bg.tertiary"
+									borderColor="border.default"
+									color="text.disabled"
+								/>
+							</Field.Root>
+							<Field.Root>
+								<Field.Label>Phone Number</Field.Label>
+								<Input
+									value={user?.phoneNumber ?? ""}
+									readOnly
+									disabled
+									bg="bg.tertiary"
+									borderColor="border.default"
+									color="text.disabled"
+								/>
+							</Field.Root>
+						</HStack>
+
+						<Field.Root invalid={!!errors.bio}>
+							<Field.Label>Bio</Field.Label>
+							<Textarea
 								bg="bg.tertiary"
 								borderColor="border.default"
-								color="text.disabled"
+								color="text.primary"
+								_focusVisible={{
+									borderColor: "brand.secondary",
+									boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
+								}}
+								placeholder="Tell us about yourself..."
+								{...register("bio")}
 							/>
+							<Field.ErrorText>
+								<Field.ErrorIcon />
+								{errors.bio?.message}
+							</Field.ErrorText>
 						</Field.Root>
-						<Field.Root>
-							<Field.Label>Username</Field.Label>
-							<Input
-								value={user?.userName ? `@${user.userName}` : ""}
-								readOnly
-								disabled
-								bg="bg.tertiary"
-								borderColor="border.default"
-								color="text.disabled"
+
+						<Field.Root invalid={!!errors.skills}>
+							<Field.Label>Skills</Field.Label>
+							<Controller
+								control={control}
+								name="skills"
+								render={({ field }) => (
+									<TagsInput.Root
+										value={field.value ?? []}
+										onValueChange={(details) => field.onChange(details.value)}>
+										<TagsInput.Control>
+											<TagsInput.Items />
+											<TagsInput.Input placeholder="Type a skill and press Enter..." />
+										</TagsInput.Control>
+										<TagsInput.HiddenInput />
+									</TagsInput.Root>
+								)}
 							/>
+							<Field.ErrorText>
+								<Field.ErrorIcon />
+								{String(errors.skills?.message || "")}
+							</Field.ErrorText>
 						</Field.Root>
-					</HStack>
 
-<Field.Root>
-						<Field.Label>Gender</Field.Label>
-						<Input
-							value={user?.gender ?? ""}
-							readOnly
-							disabled
-							bg="bg.tertiary"
-							borderColor="border.default"
-							color="text.disabled"
-							textTransform="capitalize"
-						/>
-					</Field.Root>
+						<Button
+							alignSelf="flex-end"
+							bg="button.primaryBg"
+							color="button.primaryText"
+							_hover={{ bg: "button.primaryHover" }}
+							loading={editProfileMutation.isPending}
+							disabled={editProfileMutation.isPending}
+							onClick={handleSubmit(onProfileSubmit)}>
+							Save Changes
+						</Button>
+					</VStack>
 
-<Field.Root invalid={!!errors.age}>
-						<Field.Label>Age</Field.Label>
-						<Input
-							type="number"
-							bg="bg.tertiary"
-							borderColor="border.default"
-							color="text.primary"
-							_focusVisible={{
-								borderColor: "brand.secondary",
-								boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
+					<Box position="sticky" top={0} flexShrink={0}>
+						<Text
+							fontSize="sm"
+							fontWeight="semibold"
+							color="text.secondary"
+							mb={3}>
+							Preview
+						</Text>
+						<FeedCard
+							preview
+							user={{
+								_id: user?._id ?? "",
+								firstName: user?.firstName ?? "",
+								lastName: user?.lastName ?? "",
+								userName: user?.userName ?? "",
+								age: watchedAge ?? user?.age ?? 0,
+								gender: user?.gender ?? "",
+								bio: watchedBio ?? "",
+								skills: watchedSkills ?? [],
+								profilePic: newProfilePicFile
+									? URL.createObjectURL(newProfilePicFile)
+									: (existingProfilePic ?? ""),
+								morePhotos: [...existingMorePhotos, ...newMorePhotoUrls],
+								city: user?.city ?? "",
+								state: user?.state ?? "",
+								country: user?.country ?? "",
 							}}
-							{...register("age", { valueAsNumber: true })}
+							onSwipe={() => {}}
+							setIsDrawerOpen={() => {}}
 						/>
-						<Field.ErrorText>
-							<Field.ErrorIcon />
-							{errors.age?.message}
-						</Field.ErrorText>
-					</Field.Root>
-
-<HStack width="100%">
-						<Field.Root>
-							<Field.Label>Country</Field.Label>
-							<Input
-								value={user?.country ?? ""}
-								readOnly
-								disabled
-								bg="bg.tertiary"
-								borderColor="border.default"
-								color="text.disabled"
-							/>
-						</Field.Root>
-						<Field.Root>
-							<Field.Label>State</Field.Label>
-							<Input
-								value={user?.state ?? ""}
-								readOnly
-								disabled
-								bg="bg.tertiary"
-								borderColor="border.default"
-								color="text.disabled"
-							/>
-						</Field.Root>
-					</HStack>
-
-<HStack width="100%">
-						<Field.Root>
-							<Field.Label>City</Field.Label>
-							<Input
-								value={user?.city ?? ""}
-								readOnly
-								disabled
-								bg="bg.tertiary"
-								borderColor="border.default"
-								color="text.disabled"
-							/>
-						</Field.Root>
-						<Field.Root>
-							<Field.Label>Phone Number</Field.Label>
-							<Input
-								value={user?.phoneNumber ?? ""}
-								readOnly
-								disabled
-								bg="bg.tertiary"
-								borderColor="border.default"
-								color="text.disabled"
-							/>
-						</Field.Root>
-					</HStack>
-
-<Field.Root invalid={!!errors.bio}>
-						<Field.Label>Bio</Field.Label>
-						<Textarea
-							bg="bg.tertiary"
-							borderColor="border.default"
-							color="text.primary"
-							_focusVisible={{
-								borderColor: "brand.secondary",
-								boxShadow: "0 0 0 1px var(--chakra-colors-brand-secondary)",
-							}}
-							placeholder="Tell us about yourself..."
-							{...register("bio")}
-						/>
-						<Field.ErrorText>
-							<Field.ErrorIcon />
-							{errors.bio?.message}
-						</Field.ErrorText>
-					</Field.Root>
-
-<Field.Root invalid={!!errors.skills}>
-						<Field.Label>Skills</Field.Label>
-						<Controller
-							control={control}
-							name="skills"
-							render={({ field }) => (
-								<TagsInput.Root
-									value={field.value ?? []}
-									onValueChange={(details) => field.onChange(details.value)}>
-									<TagsInput.Control>
-										<TagsInput.Items />
-										<TagsInput.Input placeholder="Type a skill and press Enter..." />
-									</TagsInput.Control>
-									<TagsInput.HiddenInput />
-								</TagsInput.Root>
-							)}
-						/>
-						<Field.ErrorText>
-							<Field.ErrorIcon />
-							{String(errors.skills?.message || "")}
-						</Field.ErrorText>
-					</Field.Root>
-
-<Button
-						alignSelf="flex-end"
-						bg="button.primaryBg"
-						color="button.primaryText"
-						_hover={{ bg: "button.primaryHover" }}
-						loading={editProfileMutation.isPending}
-						disabled={editProfileMutation.isPending}
-						onClick={handleSubmit(onProfileSubmit)}>
-						Save Changes
-					</Button>
-				</VStack>
+					</Box>
+				</HStack>
 
 				<Separator borderColor="border.default" />
 
@@ -569,7 +665,7 @@ const Profile = () => {
 
 					{isPasswordEnabled && (
 						<VStack align="stretch" gap={5}>
-<Field.Root invalid={!!pwErrors.oldPassword}>
+							<Field.Root invalid={!!pwErrors.oldPassword}>
 								<Field.Label>Old Password</Field.Label>
 								<Input
 									type="password"
@@ -588,7 +684,7 @@ const Profile = () => {
 								</Field.ErrorText>
 							</Field.Root>
 
-<Field.Root invalid={!!pwErrors.newPassword}>
+							<Field.Root invalid={!!pwErrors.newPassword}>
 								<Field.Label>New Password</Field.Label>
 								<Input
 									type="password"
@@ -631,7 +727,7 @@ const Profile = () => {
 								</Box>
 							</Field.Root>
 
-<Field.Root invalid={!!pwErrors.confirmNewPassword}>
+							<Field.Root invalid={!!pwErrors.confirmNewPassword}>
 								<Field.Label>Confirm New Password</Field.Label>
 								<Input
 									type="password"
@@ -650,7 +746,7 @@ const Profile = () => {
 								</Field.ErrorText>
 							</Field.Root>
 
-<Button
+							<Button
 								alignSelf="flex-end"
 								bg="button.primaryBg"
 								color="button.primaryText"

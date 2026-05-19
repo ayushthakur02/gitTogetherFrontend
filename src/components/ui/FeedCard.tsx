@@ -21,13 +21,16 @@ import { IoClose, IoLocationSharp } from "react-icons/io5"
 import PhotoCarousel from "./PhotoCarousel"
 
 const CARD_WIDTH = 400
-const CARD_HEIGHT = 640
+const IMAGE_HEIGHT = Math.round(CARD_WIDTH * (4 / 3)) // 533 — matches 3:4 crop ratio
+const INFO_HEIGHT = 167
+const CARD_HEIGHT = IMAGE_HEIGHT + INFO_HEIGHT // 700
 
 const FeedCard = ({
 	user,
 	onSwipe,
 	motionX,
 	setIsDrawerOpen,
+	preview = false,
 }: FeedCardProps) => {
 	const xInternal = useMotionValue(0)
 	const x = motionX ?? xInternal
@@ -48,11 +51,11 @@ const FeedCard = ({
 
 	return (
 		<motion.div
-			style={{ x, rotate: cardRotate, cursor: "grab" }}
-			drag="x"
+			style={{ x: preview ? 0 : x, rotate: preview ? 0 : cardRotate, cursor: preview ? "default" : "grab" }}
+			drag={preview ? false : "x"}
 			dragConstraints={{ left: 0, right: 0 }}
 			dragElastic={0.8}
-			onDragEnd={handleDragEnd}
+			onDragEnd={preview ? undefined : handleDragEnd}
 			whileDrag={{ cursor: "grabbing" }}>
 			<Box
 				width={`${CARD_WIDTH}px`}
@@ -64,8 +67,8 @@ const FeedCard = ({
 				bg="bg.secondary"
 				border="1px solid"
 				borderColor="border.default">
-				<Box height="60%">
-					<PhotoCarousel photos={photos} name={user.firstName} height="384px" />
+				<Box height={`${IMAGE_HEIGHT}px`}>
+					<PhotoCarousel photos={photos} name={user.firstName} height={`${IMAGE_HEIGHT}px`} />
 				</Box>
 
 				<VStack
@@ -73,7 +76,7 @@ const FeedCard = ({
 					gap={2}
 					px={4}
 					pb={3}
-					height="40%"
+					height={`${INFO_HEIGHT}px`}
 					justify="space-between">
 					<Box>
 						<Text
@@ -118,29 +121,31 @@ const FeedCard = ({
 						</HStack>
 					)}
 
-					<HStack justify="center" gap={6}>
-						<Button
-							variant="outline"
-							colorPalette="red"
-							borderRadius="full"
-							size="lg"
-							onClick={() => onSwipe("dismissed")}>
-							<Icon as={IoClose} />
-						</Button>
-						<Button
-							borderRadius="full"
-							size="lg"
-							onClick={() => setIsDrawerOpen(true)}>
-							<Icon as={FaExpandArrowsAlt} />
-						</Button>
-						<Button
-							colorPalette="green"
-							borderRadius="full"
-							size="lg"
-							onClick={() => onSwipe("starred")}>
-							<Icon as={FaCodePullRequest} />
-						</Button>
-					</HStack>
+					{!preview && (
+						<HStack justify="center" gap={6}>
+							<Button
+								variant="outline"
+								colorPalette="red"
+								borderRadius="full"
+								size="lg"
+								onClick={() => onSwipe("dismissed")}>
+								<Icon as={IoClose} />
+							</Button>
+							<Button
+								borderRadius="full"
+								size="lg"
+								onClick={() => setIsDrawerOpen(true)}>
+								<Icon as={FaExpandArrowsAlt} />
+							</Button>
+							<Button
+								colorPalette="green"
+								borderRadius="full"
+								size="lg"
+								onClick={() => onSwipe("starred")}>
+								<Icon as={FaCodePullRequest} />
+							</Button>
+						</HStack>
+					)}
 				</VStack>
 			</Box>
 		</motion.div>
