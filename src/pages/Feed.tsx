@@ -144,45 +144,49 @@ const Feed = () => {
 	return (
 		<Flex justifyContent="center" alignItems="center" height="100%">
 			<div style={{ position: "relative", width: "fit-content" }}>
-				<motion.div
-					style={{
-						opacity: rejectOpacity,
-						position: "absolute",
-						top: "50%",
-						left: -80,
-						transform: "translateY(-50%)",
-						zIndex: 20,
-						pointerEvents: "none",
-					}}>
-					<Box
-						border="3px solid"
-						borderColor="red.500"
-						borderRadius="md"
-						p={3}
-						style={{ transform: "rotate(-15deg)" }}>
-						<Icon as={IoClose} color="red.500" boxSize={10} />
-					</Box>
-				</motion.div>
+				<Box display={{ base: "none", md: "block" }}>
+					<motion.div
+						style={{
+							opacity: rejectOpacity,
+							position: "absolute",
+							top: "50%",
+							left: -80,
+							transform: "translateY(-50%)",
+							zIndex: 20,
+							pointerEvents: "none",
+						}}>
+						<Box
+							border="3px solid"
+							borderColor="red.500"
+							borderRadius="md"
+							p={3}
+							style={{ transform: "rotate(-15deg)" }}>
+							<Icon as={IoClose} color="red.500" boxSize={10} />
+						</Box>
+					</motion.div>
+				</Box>
 
-			<motion.div
-					style={{
-						opacity: connectOpacity,
-						position: "absolute",
-						top: "50%",
-						right: -80,
-						transform: "translateY(-50%)",
-						zIndex: 20,
-						pointerEvents: "none",
-					}}>
-					<Box
-						border="3px solid"
-						borderColor="green.500"
-						borderRadius="md"
-						p={3}
-						style={{ transform: "rotate(15deg)" }}>
-						<Icon as={FaCodePullRequest} color="green.500" boxSize={10} />
-					</Box>
-				</motion.div>
+				<Box display={{ base: "none", md: "block" }}>
+					<motion.div
+						style={{
+							opacity: connectOpacity,
+							position: "absolute",
+							top: "50%",
+							right: -80,
+							transform: "translateY(-50%)",
+							zIndex: 20,
+							pointerEvents: "none",
+						}}>
+						<Box
+							border="3px solid"
+							borderColor="green.500"
+							borderRadius="md"
+							p={3}
+							style={{ transform: "rotate(15deg)" }}>
+							<Icon as={FaCodePullRequest} color="green.500" boxSize={10} />
+						</Box>
+					</motion.div>
+				</Box>
 
 			{nextUser && (
 					<motion.div

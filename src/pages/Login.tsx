@@ -46,11 +46,11 @@ const Login = () => {
 			width="100%"
 			minH="100vh"
 			justify="center"
-			align="center"
+			align={{ base: "flex-start", md: "center" }}
 			bg="bg.primary"
 			position="relative"
 			overflow="hidden"
-			p={6}>
+			p={{ base: 4, md: 6 }}>
 			<Box
 				position="absolute"
 				inset={0}
@@ -66,14 +66,15 @@ const Login = () => {
 				zIndex={1}
 				width="100%"
 				maxWidth="1200px"
-				height="calc(100vh - 48px)"
-				maxH="760px"
+				height={{ base: "auto", md: "calc(100vh - 48px)" }}
+				maxH={{ base: "none", md: "760px" }}
 				border="1px solid"
 				borderColor="border.default"
 				borderRadius="2xl"
 				bg="bg.secondary"
 				backdropFilter="blur(14px)"
-				overflow="hidden">
+				overflow="hidden"
+				direction={{ base: "column", md: "row" }}>
 				<Flex
 					flex={1}
 					direction="column"
@@ -81,7 +82,8 @@ const Login = () => {
 					gap={16}
 					p={12}
 					borderRight="1px solid"
-					borderColor="border.default">
+					borderColor="border.default"
+					display={{ base: "none", md: "flex" }}>
 					<VStack align="start" gap={8}>
 						<HStack gap={3}>
 							<Icon as={FaCode} color="brand.secondary" />
@@ -128,7 +130,7 @@ const Login = () => {
 					</Box>
 				</Flex>
 
-				<Flex flex={1} direction="column" p={12}>
+				<Flex flex={1} direction="column" p={{ base: 6, md: 12 }}>
 					<VStack align="stretch" gap={7} maxW="420px" width="100%" mx="auto">
 						<Box>
 							<Text color="text.secondary">Welcome back, dev.</Text>

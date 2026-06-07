@@ -18,6 +18,7 @@ import {
 	Dialog,
 	Field,
 	FileUpload,
+	Flex,
 	Float,
 	HStack,
 	Icon,
@@ -220,7 +221,7 @@ const Profile = () => {
 
 	if (isLoading) {
 		return (
-			<Box p={8} height="100%" overflowY="auto">
+			<Box p={{ base: 4, md: 8 }} height="100%" overflowY="auto">
 				<VStack align="stretch" gap={6}>
 					<SkeletonText noOfLines={2} />
 					<Skeleton height="180px" />
@@ -231,7 +232,7 @@ const Profile = () => {
 	}
 
 	return (
-		<Box p={8} height="100%" overflowY="auto">
+		<Box p={{ base: 4, md: 8 }} height="100%" overflowY="auto">
 			<VStack align="stretch" gap={8}>
 				<Box>
 					<Text fontSize="3xl" fontWeight="bold" color="text.primary">
@@ -244,7 +245,7 @@ const Profile = () => {
 
 				<Separator borderColor="border.default" />
 
-				<HStack align="start" gap={10}>
+				<Flex align="start" gap={10} direction={{ base: "column", lg: "row" }}>
 					<VStack align="stretch" gap={5} flex={1}>
 						<Text fontSize="lg" fontWeight="semibold" color="text.primary">
 							Profile Information
@@ -418,8 +419,8 @@ const Profile = () => {
 							</VStack>
 						</Field.Root>
 
-						<HStack width="100%">
-							<Field.Root>
+						<Flex direction={{ base: "column", md: "row" }} gap={4} width="100%">
+							<Field.Root flex={1}>
 								<Field.Label>First Name</Field.Label>
 								<Input
 									value={user?.firstName ?? ""}
@@ -430,7 +431,7 @@ const Profile = () => {
 									color="text.disabled"
 								/>
 							</Field.Root>
-							<Field.Root>
+							<Field.Root flex={1}>
 								<Field.Label>Last Name</Field.Label>
 								<Input
 									value={user?.lastName ?? ""}
@@ -441,10 +442,10 @@ const Profile = () => {
 									color="text.disabled"
 								/>
 							</Field.Root>
-						</HStack>
+						</Flex>
 
-						<HStack width="100%">
-							<Field.Root>
+						<Flex direction={{ base: "column", md: "row" }} gap={4} width="100%">
+							<Field.Root flex={1}>
 								<Field.Label>Email</Field.Label>
 								<Input
 									value={user?.emailId ?? ""}
@@ -455,7 +456,7 @@ const Profile = () => {
 									color="text.disabled"
 								/>
 							</Field.Root>
-							<Field.Root>
+							<Field.Root flex={1}>
 								<Field.Label>Username</Field.Label>
 								<Input
 									value={user?.userName ? `@${user.userName}` : ""}
@@ -466,7 +467,7 @@ const Profile = () => {
 									color="text.disabled"
 								/>
 							</Field.Root>
-						</HStack>
+						</Flex>
 
 						<Field.Root>
 							<Field.Label>Gender</Field.Label>
@@ -500,8 +501,8 @@ const Profile = () => {
 							</Field.ErrorText>
 						</Field.Root>
 
-						<HStack width="100%">
-							<Field.Root>
+						<Flex direction={{ base: "column", md: "row" }} gap={4} width="100%">
+							<Field.Root flex={1}>
 								<Field.Label>Country</Field.Label>
 								<Input
 									value={user?.country ?? ""}
@@ -512,7 +513,7 @@ const Profile = () => {
 									color="text.disabled"
 								/>
 							</Field.Root>
-							<Field.Root>
+							<Field.Root flex={1}>
 								<Field.Label>State</Field.Label>
 								<Input
 									value={user?.state ?? ""}
@@ -523,10 +524,10 @@ const Profile = () => {
 									color="text.disabled"
 								/>
 							</Field.Root>
-						</HStack>
+						</Flex>
 
-						<HStack width="100%">
-							<Field.Root>
+						<Flex direction={{ base: "column", md: "row" }} gap={4} width="100%">
+							<Field.Root flex={1}>
 								<Field.Label>City</Field.Label>
 								<Input
 									value={user?.city ?? ""}
@@ -537,7 +538,7 @@ const Profile = () => {
 									color="text.disabled"
 								/>
 							</Field.Root>
-							<Field.Root>
+							<Field.Root flex={1}>
 								<Field.Label>Phone Number</Field.Label>
 								<Input
 									value={user?.phoneNumber ?? ""}
@@ -548,7 +549,7 @@ const Profile = () => {
 									color="text.disabled"
 								/>
 							</Field.Root>
-						</HStack>
+						</Flex>
 
 						<Field.Root invalid={!!errors.bio}>
 							<Field.Label>Bio</Field.Label>
@@ -604,7 +605,7 @@ const Profile = () => {
 						</Button>
 					</VStack>
 
-					<Box position="sticky" top={0} flexShrink={0}>
+					<Box position="sticky" top={0} flexShrink={0} display={{ base: "none", lg: "block" }}>
 						<Text
 							fontSize="sm"
 							fontWeight="semibold"
@@ -635,7 +636,7 @@ const Profile = () => {
 							setIsDrawerOpen={() => {}}
 						/>
 					</Box>
-				</HStack>
+				</Flex>
 
 				<Separator borderColor="border.default" />
 

@@ -25,6 +25,11 @@ const IMAGE_HEIGHT = Math.round(CARD_WIDTH * (4 / 3)) // 533 — matches 3:4 cro
 const INFO_HEIGHT = 167
 const CARD_HEIGHT = IMAGE_HEIGHT + INFO_HEIGHT // 700
 
+// Responsive CSS — card shrinks on screens narrower than 432px
+const CSS_CARD_W = `min(${CARD_WIDTH}px, calc(100vw - 32px))`
+const CSS_IMG_H = `min(${IMAGE_HEIGHT}px, calc((100vw - 32px) * 1.3325))`
+const CSS_CARD_H = `min(${CARD_HEIGHT}px, calc((100vw - 32px) * 1.3325 + ${INFO_HEIGHT}px))`
+
 const FeedCard = ({
 	user,
 	onSwipe,
@@ -58,8 +63,8 @@ const FeedCard = ({
 			onDragEnd={preview ? undefined : handleDragEnd}
 			whileDrag={{ cursor: "grabbing" }}>
 			<Box
-				width={`${CARD_WIDTH}px`}
-				height={`${CARD_HEIGHT}px`}
+				width={CSS_CARD_W}
+				height={CSS_CARD_H}
 				borderRadius="2xl"
 				overflow="hidden"
 				boxShadow="xl"
@@ -67,8 +72,8 @@ const FeedCard = ({
 				bg="bg.secondary"
 				border="1px solid"
 				borderColor="border.default">
-				<Box height={`${IMAGE_HEIGHT}px`}>
-					<PhotoCarousel photos={photos} name={user.firstName} height={`${IMAGE_HEIGHT}px`} />
+				<Box height={CSS_IMG_H}>
+					<PhotoCarousel photos={photos} name={user.firstName} height={CSS_IMG_H} />
 				</Box>
 
 				<VStack

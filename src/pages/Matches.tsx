@@ -54,7 +54,7 @@ const Matches = () => {
 	}
 
 	return (
-		<Box p={8} height="100%" overflowY="auto">
+		<Box p={{ base: 4, md: 8 }} height="100%" overflowY="auto">
 <Box mb={6}>
 				<HStack gap={3} align="baseline">
 					<Text fontSize="3xl" fontWeight="bold" color="text.primary">
