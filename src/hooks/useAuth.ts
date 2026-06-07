@@ -25,7 +25,7 @@ export const useLogin = () => {
 
 		onError: (error) => {
 			const message = axios.isAxiosError(error)
-				? error.response?.data?.message || error.message
+				? error.response?.data?.message || error.response?.data?.error || error.message
 				: "Something went wrong"
 
 			toaster.create({
@@ -43,7 +43,7 @@ export const useSignup = () => {
 
 		onError: (error) => {
 			const message = axios.isAxiosError(error)
-				? error.response?.data?.message || error.message
+				? error.response?.data?.message || error.response?.data?.error || error.message
 				: "Something went wrong"
 
 			toaster.create({
