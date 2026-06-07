@@ -46,7 +46,7 @@ const DetailDrawer = ({
 				<Drawer.Positioner>
 					<Drawer.Content>
 						<Drawer.CloseTrigger asChild>
-							<CloseButton size="sm" onClick={() => setIsDrawerOpen(false)} />
+							<CloseButton size="sm" zIndex={20} onClick={() => setIsDrawerOpen(false)} />
 						</Drawer.CloseTrigger>
 
 						<Drawer.Body p={0}>
