@@ -201,7 +201,7 @@ const Login = () => {
 							</Field.Root>
 
 							<Field.Root invalid={!!errors.password}>
-								<Flex justify="space-between" mb={2}>
+								<Flex justify="space-between" align="center" width="100%" mb={2}>
 									<Text color="text.secondary" fontSize="sm">
 										Password
 									</Text>
