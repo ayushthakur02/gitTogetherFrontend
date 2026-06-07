@@ -2,7 +2,7 @@ import { z } from "zod"
 
 export const editProfileSchema = z.object({
 	age: z
-		.number({ invalid_type_error: "Age is required" })
+		.number({ error: "Age is required" })
 		.min(18, "Must be at least 18")
 		.max(100, "Must be at most 100"),
 	bio: z
