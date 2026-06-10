@@ -9,6 +9,9 @@ import { flushSync } from "react-dom"
 import { FaCodePullRequest } from "react-icons/fa6"
 import { IoClose } from "react-icons/io5"
 
+const VISIBLE_AHEAD = 2
+const PRELOAD_AHEAD = 4
+
 const Feed = () => {
 	const { data, isLoading, isError, isFetching, refetch } = useUserFeed()
 	const [currentIndex, setCurrentIndex] = useState(0)
@@ -25,6 +28,23 @@ const Feed = () => {
 	const nextCardScale = useTransform(x, [-300, 0, 300], [1, 0.92, 1])
 	const nextCardOpacity = useTransform(x, [-150, 0, 150], [1, 0.6, 1])
 
+	// Preload images for upcoming cards so they're browser-cached before render
+	useEffect(() => {
+		const upcoming = (data?.data ?? []).slice(
+			currentIndex + 1,
+			currentIndex + PRELOAD_AHEAD,
+		)
+		upcoming.forEach((user) => {
+			const photos = [user.profilePic, ...(user.morePhotos ?? [])].filter(
+				Boolean,
+			) as string[]
+			photos.forEach((url) => {
+				const img = new Image()
+				img.src = url
+			})
+		})
+	}, [currentIndex, data])
+
 	const triggerSwipe = async (status: "dismissed" | "starred") => {
 		const target =
 			status === "dismissed"
@@ -33,15 +53,11 @@ const Feed = () => {
 		await animate(x, target, { type: "tween", duration: 0.35, ease: "easeIn" })
 
 		if (currentUser) {
-			requestMutation.mutate(
-				{ status, recipientID: currentUser._id },
-				{
-					onSettled: () => {
-						flushSync(() => setCurrentIndex((prev) => prev + 1))
-						x.set(0)
-					},
-				},
-			)
+			const recipientID = currentUser._id
+			// Advance immediately — don't wait for the API response
+			flushSync(() => setCurrentIndex((prev) => prev + 1))
+			x.set(0)
+			requestMutation.mutate({ status, recipientID })
 		}
 	}
 
@@ -109,8 +125,6 @@ const Feed = () => {
 		)
 	}
 
-	const nextUser = data?.data[currentIndex + 1]
-
 	if (!currentUser) {
 		return isFetching ? (
 			<Flex
@@ -140,6 +154,13 @@ const Feed = () => {
 			</Flex>
 		)
 	}
+
+	// Slice the window of cards to render. Stable keys (user._id only) mean
+	// React keeps the next card mounted across swipes — no remount, no image reload.
+	const visibleCards = (data?.data ?? []).slice(
+		currentIndex,
+		currentIndex + VISIBLE_AHEAD,
+	)
 
 	return (
 		<Flex justifyContent="center" alignItems="center" height="100%">
@@ -188,37 +209,41 @@ const Feed = () => {
 					</motion.div>
 				</Box>
 
-			{nextUser && (
-					<motion.div
-						style={{
-							scale: nextCardScale,
-							opacity: nextCardOpacity,
-							position: "absolute",
-							top: 0,
-							left: 0,
-							right: 0,
-							pointerEvents: "none",
-						}}>
-						<FeedCard
-							key={`next-${nextUser._id}`}
-							user={nextUser}
-							onSwipe={() => {}}
-							setIsDrawerOpen={() => {}}
-						/>
-					</motion.div>
-				)}
-
-			<FeedCard
-					key={currentUser._id}
-					user={currentUser}
-					onSwipe={triggerSwipe}
-					motionX={x}
-					setIsDrawerOpen={setIsDrawerOpen}
-				/>
+				{/* Render in reverse DOM order so the current card (idx=0) sits on top naturally */}
+				{[...visibleCards].reverse().map((user, reverseIdx) => {
+					const idx = visibleCards.length - 1 - reverseIdx
+					const isCurrent = idx === 0
+					return (
+						<motion.div
+							key={user._id}
+							style={
+								isCurrent
+									? {}
+									: {
+											scale: nextCardScale,
+											opacity: nextCardOpacity,
+											position: "absolute",
+											top: 0,
+											left: 0,
+											right: 0,
+											pointerEvents: "none",
+										}
+							}>
+							<FeedCard
+								user={user}
+								onSwipe={isCurrent ? triggerSwipe : () => {}}
+								motionX={isCurrent ? x : undefined}
+								setIsDrawerOpen={isCurrent ? setIsDrawerOpen : () => {}}
+								preview={!isCurrent}
+							/>
+						</motion.div>
+					)
+				})}
 			</div>
+
 			{currentUser?._id && (
 				<DetailDrawer
-					id={currentUser?._id}
+					id={currentUser._id}
 					setIsDrawerOpen={setIsDrawerOpen}
 					isDrawerOpen={isDrawerOpen}
 					onSwipe={triggerSwipe}

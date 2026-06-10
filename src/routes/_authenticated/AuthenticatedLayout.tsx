@@ -2,13 +2,15 @@ import SideBar from "@/components/SideBar"
 import { SIDEBAR_ITEMS } from "@/constants/sidebarConstants"
 import { Box, Flex, Icon, Text } from "@chakra-ui/react"
 import { Link, Outlet, useRouterState } from "@tanstack/react-router"
-import { useCurrentUser } from "@/hooks/useAuth"
+import { useCurrentUser, useLogout } from "@/hooks/useAuth"
+import { LogOut } from "lucide-react"
 
 const AuthenticatedLayout = () => {
 	useCurrentUser()
 	const activePath = useRouterState({
 		select: (state) => state.location.pathname,
 	})
+	const logoutMutation = useLogout()
 
 	return (
 		<Flex height="100vh" overflow="hidden">
@@ -52,6 +54,19 @@ const AuthenticatedLayout = () => {
 						</Flex>
 					</Link>
 				))}
+				<Flex
+					direction="column"
+					align="center"
+					gap={0.5}
+					p={2}
+					borderRadius="md"
+					color="text.secondary"
+					cursor="pointer"
+					opacity={logoutMutation.isPending ? 0.5 : 1}
+					onClick={() => logoutMutation.mutate()}>
+					<Icon boxSize={5}><LogOut /></Icon>
+					<Text fontSize="2xs">Logout</Text>
+				</Flex>
 			</Box>
 		</Flex>
 	)
