@@ -1,3 +1,4 @@
+import { memo } from "react"
 import type { FeedCardProps } from "@/interfaces/feed.interfaces"
 import {
 	Badge,
@@ -157,4 +158,4 @@ const FeedCard = ({
 	)
 }
 
-export default FeedCard
+export default memo(FeedCard)

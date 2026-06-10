@@ -4,13 +4,15 @@ import { useSendRequest } from "@/hooks/useRequest"
 import { useUserFeed } from "@/hooks/useUser"
 import { Box, Flex, Icon, Spinner, Text } from "@chakra-ui/react"
 import { animate, motion, useMotionValue, useTransform } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { flushSync } from "react-dom"
 import { FaCodePullRequest } from "react-icons/fa6"
 import { IoClose } from "react-icons/io5"
 
 const VISIBLE_AHEAD = 2
 const PRELOAD_AHEAD = 4
+const NOOP_SWIPE = (_status: "dismissed" | "starred") => {}
+const NOOP_DRAWER = (_open: boolean) => {}
 
 const Feed = () => {
 	const { data, isLoading, isError, isFetching, refetch } = useUserFeed()
@@ -45,21 +47,33 @@ const Feed = () => {
 		})
 	}, [currentIndex, data])
 
-	const triggerSwipe = async (status: "dismissed" | "starred") => {
-		const target =
-			status === "dismissed"
-				? -window.innerWidth * 1.5
-				: window.innerWidth * 1.5
-		await animate(x, target, { type: "tween", duration: 0.35, ease: "easeIn" })
+	// Ref keeps triggerSwipe stable (useCallback) without going stale on currentUser
+	const currentUserRef = useRef(currentUser)
+	currentUserRef.current = currentUser
 
-		if (currentUser) {
-			const recipientID = currentUser._id
-			// Advance immediately — don't wait for the API response
-			flushSync(() => setCurrentIndex((prev) => prev + 1))
-			x.set(0)
-			requestMutation.mutate({ status, recipientID })
-		}
-	}
+	const triggerSwipe = useCallback(
+		async (status: "dismissed" | "starred") => {
+			const target =
+				status === "dismissed"
+					? -window.innerWidth * 1.5
+					: window.innerWidth * 1.5
+			await animate(x, target, {
+				type: "tween",
+				duration: 0.35,
+				ease: "easeIn",
+			})
+
+			const user = currentUserRef.current
+			if (user) {
+				const recipientID = user._id
+				flushSync(() => setCurrentIndex((prev) => prev + 1))
+				x.set(0)
+				requestMutation.mutate({ status, recipientID })
+			}
+		},
+		// requestMutation.mutate is stable in React Query v5
+		[x, requestMutation.mutate],
+	)
 
 	useEffect(() => {
 		if (pendingDirection === "left")
@@ -92,7 +106,7 @@ const Feed = () => {
 
 		window.addEventListener("keydown", handleKeyDown)
 		return () => window.removeEventListener("keydown", handleKeyDown)
-	}, [pendingDirection])
+	}, [pendingDirection, triggerSwipe])
 
 	const isRefetching = useRef(false)
 	const feedLength = data?.data.length ?? 0
@@ -231,9 +245,9 @@ const Feed = () => {
 							}>
 							<FeedCard
 								user={user}
-								onSwipe={isCurrent ? triggerSwipe : () => {}}
+								onSwipe={isCurrent ? triggerSwipe : NOOP_SWIPE}
 								motionX={isCurrent ? x : undefined}
-								setIsDrawerOpen={isCurrent ? setIsDrawerOpen : () => {}}
+								setIsDrawerOpen={isCurrent ? setIsDrawerOpen : NOOP_DRAWER}
 								preview={!isCurrent}
 							/>
 						</motion.div>
